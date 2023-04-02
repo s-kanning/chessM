@@ -181,7 +181,7 @@ class Controller:
         self.view.selector_opening_string_var.set(button)
 
     def game_board_click(self, button):
-        print(f"game_board clicks: {button}")
+        print(f"game_board click: {button}")
 
 
 
