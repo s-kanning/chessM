@@ -442,6 +442,7 @@ class View(customtkinter.CTk):
 
         settings_page_display.pack(pady=0, padx=0, side="top", expand=True)
 
+        # TODO: add functionality to SETTINGS page ->priority1
         label1 = customtkinter.CTkLabel(settings_page_display, text="Label1",
                                         font=(Font, 20), bg_color='white'
                                         )

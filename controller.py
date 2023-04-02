@@ -138,6 +138,7 @@ class Controller:
             opening_name = self.view.editor_name_textbox.get("0.0", "end")
             self.model.delete_db_entry(opening_name)
 
+        # TODO: add visual feedback on correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
             if self.view.move_entry.get() == self.model.active_moves_only[self.model.current_move]:
                 print("correct")
@@ -172,7 +173,7 @@ class Controller:
                 self.view.database_textbox.insert("end", str(item) + "\n")
 
         if button == 'game_board':
-            # print("game_board: click")
+            print("game_board: click")
             pass
 
     def other_button_clicks(self, button):

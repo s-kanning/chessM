@@ -4,6 +4,20 @@ from PIL import Image
 import configurations
 
 
+# TODO: connect textbox and chess board -> priority1
+#       when a move is made on the board, write it in the next box. disable textbox
+#       make a list the records move lists
+#       append moves to the list -> click
+#       create a function to pop() a move off the list -> use case?
+
+# TODO: add functionality of view buttons to cycle through move list -> priority2
+#        separate list of moves necessary?
+
+
+# TODO: make 'reset' function -> priority2
+#       set board to beginning position, reset piece count position, board state, move list etc.
+
+
 class ChessBoard:
     controller = None
     parent_frame = None
