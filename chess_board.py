@@ -45,6 +45,7 @@ class ChessBoard:
 
         self.coord = []
         self.buttons = []
+        self.move_list = []
         self.piece_location = []
         self.selected_piece = None
         self.move_from_ind = None
@@ -135,7 +136,7 @@ class ChessBoard:
 
     def click(self, coordinate):
         ind = self.coord.index(coordinate)
-        self.controller.on_button_click('game_board')
+        self.controller.game_board_click(coordinate)
 
         if self.selected_piece is not None:  # on click, if exists selected piece, place at square
 
@@ -143,7 +144,7 @@ class ChessBoard:
                 self.selected_piece = None
                 print("deselected piece")
 
-            else:
+            else:  # play piece
                 self.buttons[ind].configure(image=self.selected_piece.image)
                 self.buttons[ind].configure(text='')
                 self.buttons[self.move_from_ind].configure(image=self.empty_image)
@@ -153,6 +154,7 @@ class ChessBoard:
                 self.selected_piece = None
                 self.move_from_ind = None
                 self.half_move_count += 1  # return move information str(piece_notation + coord)
+                self.move_list.append(move_played)
 
                 return move_played, self.half_move_count
 
