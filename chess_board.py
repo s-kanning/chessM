@@ -144,7 +144,7 @@ class ChessBoard:
                 self.selected_piece = None
                 print("deselected piece")
 
-            else:  # play piece
+            else:  # play piece and append it to move_list
                 self.buttons[ind].configure(image=self.selected_piece.image)
                 self.buttons[ind].configure(text='')
                 self.buttons[self.move_from_ind].configure(image=self.empty_image)
