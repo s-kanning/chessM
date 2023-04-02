@@ -1,0 +1,189 @@
+# acts as an intermediary between the model and the view
+from view import View
+from model import Model
+from chess_board import ChessBoard
+
+
+class Controller:
+
+    def __init__(self):
+        self.model = Model()
+        self.view = View(self)
+        self.study_board = ChessBoard(view=self.view, controller=self, frame=self.view.board_frame)
+        self.study_board.create_everything()
+        self.selector_board = ChessBoard(view=self.view, controller=self, frame=self.view.selecting_frame)
+        self.selector_board.create_everything()
+        self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
+        self.editor_board.create_everything()
+
+    def main(self):
+        self.view.main()
+
+    def on_button_click(self, button):
+        # print(f"button clicked: {button}")
+        if button == 'login':
+            username = self.view.username_entry.get()
+            password = self.view.password_entry.get()
+            if self.model.login(username, password):
+                self.view.show_frame(self.view.MainPage)
+                pass
+            else:
+                pass
+
+        if button == 'selector':
+            data = self.model.get_user_openings(self.model.user_id)  # get list of user openings
+            #  print(data)
+            temp_list = []
+            for item in data:
+                temp_list.append(item[0])
+
+            self.view.select_menu.configure(values=temp_list)
+            # populate the selector_menu with the opening names, the first item of each tuple in the openings list
+
+            self.view.show_main_container_frame(self.view.selector_frame)
+
+        if button == 'selector_menu':  # useless? the menu uses the button name, not this name
+            info = self.view.select_menu.get()
+            print("this is the info: " + info)
+
+            # take an opening and populate the opening page, get ready to pass information to 'study' button
+
+        if button == 'study':
+            self.view.show_main_container_frame(self.view.study_frame)
+
+            opening = self.view.selector_opening_string_var.get()
+            self.view.study_opening_name.set(opening)
+            self.model.active_opening_name = opening
+
+            data = self.model.get_user_openings(self.model.user_id)
+
+            active_opening_moves = ''
+            for item in data:
+                if item[0] == opening:
+                    active_opening_moves = item[1]
+            self.model.active_opening_moves = active_opening_moves
+            print("model active opening name: " + self.model.active_opening_name)
+            print("model active opening moves: " + self.model.active_opening_moves)
+
+            self.model.active_moves_only = self.model.format_move_list(self.model.active_opening_moves)
+            self.model.current_move = 0
+            print("active moves only: ")
+            print(self.model.active_moves_only)
+
+        if button == 'database':
+            self.view.show_main_container_frame(self.view.database_frame)
+
+        if button == 'settings':
+            self.view.show_frame(self.view.SettingsPage)
+
+        if button == 'logout':
+            self.view.show_frame(self.view.LoginPage)
+            self.model.user_id = ''
+            self.model.active_user = ''
+            #  add some kind of reset function to clear everything and reset the values of each page/label etc.
+
+        if button == 'main_page':
+            self.view.show_frame(self.view.MainPage)
+
+        if button == 'edit_opening':
+            self.view.show_main_container_frame(self.view.editor_frame)
+            opening = self.view.selector_opening_string_var.get()
+
+            # set the title to the opening's name
+            self.view.editor_name_textbox.delete("0.0", "end")
+            self.view.editor_name_textbox.insert("0.0", opening)
+
+            data = self.model.get_user_openings(self.model.user_id)
+
+            active_opening_moves = ''
+            for item in data:
+                if item[0] == opening:
+                    active_opening_moves = item[1]
+            self.model.active_opening_moves = active_opening_moves
+
+            #  set the move list in the text box
+            self.view.editor_move_textbox.delete("0.0", "end")
+            self.view.editor_move_textbox.insert("0.0", active_opening_moves)
+            self.model.active_opening_name = opening
+
+            print("model active opening name: " + self.model.active_opening_name)
+            print("model active opening moves: " + self.model.active_opening_moves)
+
+        if button == 'create':
+            self.view.show_main_container_frame(self.view.editor_frame)
+
+        if button == 'save_changes':  # button found on create/edit frame
+            data = self.model.get_user_openings(self.model.user_id)  # get list of user openings
+            #  print(data)
+            temp_list = []
+            for item in data:
+                temp_list.append(item[0])
+            new_entry_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
+
+            if new_entry_name in temp_list:  # if opening name already exists in database, give warning message and ask if user wants to update, otherwise create new entry
+                opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c'
+                                                                 )  # "1.0",'end-1c' is necessary to remove the last character, otherwise a new line is added,
+                print("Updated entry: " + opening_name)
+
+                move_list = self.view.editor_move_textbox.get("1.0", 'end-1c')
+                self.model.edit_db_entry(opening_name, move_list)
+            else:
+                opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
+                move_list = self.view.editor_move_textbox.get("1.0", 'end-1c')
+                self.model.create_db_entry(self.model.user_id, opening_name, move_list)
+                print("Created new entry: " + opening_name)
+
+        if button == 'delete':  # button found on create/edit frame
+            print("delete entry from database")
+            opening_name = self.view.editor_name_textbox.get("0.0", "end")
+            self.model.delete_db_entry(opening_name)
+
+        if button == 'submit':  # check user input against move list
+            if self.view.move_entry.get() == self.model.active_moves_only[self.model.current_move]:
+                print("correct")
+                self.model.current_move += 2  # move to white's next move
+            else:
+                print("incorrect")
+
+        if button == 'backwards':  # decrease move count, update chessboard
+            pass
+
+        if button == 'forwards':  # increase move count, update chessboard
+            pass
+
+        if button == 'update_database_entry':
+            pass
+
+        if button == 'delete_database_entry':
+            table = self.view.table_selector.get()
+            oid = self.view.oid_entry_box.get()
+            self.model.admin_delete_db_entry(table, oid)
+
+        if button == 'test_function':
+            print(button)
+
+        if button == 'query_database_entry':
+            table = self.view.table_selector.get()
+
+            info = self.model.admin_query_full_database(table)
+            self.view.database_textbox.delete("0.0", "end")
+
+            for item in info:
+                self.view.database_textbox.insert("end", str(item) + "\n")
+
+        if button == 'game_board':
+            # print("game_board: click")
+            pass
+
+    def other_button_clicks(self, button):
+        print(f"other button clicks: {button}")
+        self.view.selector_opening_string_var.set(button)
+
+    def game_board_click(self, button):
+        print(f"game_board clicks: {button}")
+
+
+
+if __name__ == '__main__':
+    chessApp = Controller()
+    chessApp.main()
