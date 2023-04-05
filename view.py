@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
+# TODO: create a reset button to reset the game state to the starting position priority2
 
 class View(customtkinter.CTk):
 
