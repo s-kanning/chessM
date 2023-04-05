@@ -14,10 +14,6 @@ import configurations
 #        separate list of moves necessary?
 
 
-# TODO: make 'reset' function -> priority2
-#       set board to beginning position, reset piece count position, board state, move list etc.
-
-
 class ChessBoard:
     controller = None
     parent_frame = None
@@ -47,17 +43,22 @@ class ChessBoard:
         self.buttons = []
         self.move_list = []
         self.piece_location = []
+        self.starting_position = []
         self.selected_piece = None
         self.move_from_ind = None
         self.half_move_count = 0
 
     def create_everything(self):
 
-        self.connect_chess_images()
-        self.make_board(self.parent_frame)
-        self.game_setup()
+        self._connect_chess_images()
+        self._make_board(self.parent_frame)
+        self._starting_position_setup()
+        self._new_game_set()
 
-    def connect_chess_images(self):
+    def reset_board(self):
+        self._new_game_set()
+
+    def _connect_chess_images(self):
         self.K_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\K.png"),
             size=(self.image_size, self.image_size)
@@ -111,7 +112,7 @@ class ChessBoard:
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\empty square.png"), size=(1, 1)
         )
 
-    def make_board(self, frame):
+    def _make_board(self, frame):
         button_size = 80
         column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         row_list = [8, 7, 6, 5, 4, 3, 2, 1]
@@ -165,93 +166,97 @@ class ChessBoard:
         else:  # if no piece in square, pass
             pass
 
-    def game_setup(self):
-        white_starting_pieces = []
-        black_starting_pieces = []
+    def _starting_position_setup(self):
+        self.white_starting_pieces = []
+        self.black_starting_pieces = []
 
         wp1 = Pawn(self, 'w')
-        white_starting_pieces.append(wp1)
+        self.white_starting_pieces.append(wp1)
         wp2 = Pawn(self, 'w')
-        white_starting_pieces.append(wp2)
+        self.white_starting_pieces.append(wp2)
         wp3 = Pawn(self, 'w')
-        white_starting_pieces.append(wp3)
+        self.white_starting_pieces.append(wp3)
         wp4 = Pawn(self, 'w')
-        white_starting_pieces.append(wp4)
+        self.white_starting_pieces.append(wp4)
         wp5 = Pawn(self, 'w')
-        white_starting_pieces.append(wp5)
+        self.white_starting_pieces.append(wp5)
         wp6 = Pawn(self, 'w')
-        white_starting_pieces.append(wp6)
+        self.white_starting_pieces.append(wp6)
         wp7 = Pawn(self, 'w')
-        white_starting_pieces.append(wp7)
+        self.white_starting_pieces.append(wp7)
         wp8 = Pawn(self, 'w')
-        white_starting_pieces.append(wp8)
+        self.white_starting_pieces.append(wp8)
 
         wr1 = Rook(self, 'w')
-        white_starting_pieces.append(wr1)
+        self.white_starting_pieces.append(wr1)
         wn1 = Knight(self, 'w')
-        white_starting_pieces.append(wn1)
+        self.white_starting_pieces.append(wn1)
         wb1 = Bishop(self, 'w')
-        white_starting_pieces.append(wb1)
+        self.white_starting_pieces.append(wb1)
         wq1 = Queen(self, 'w')
-        white_starting_pieces.append(wq1)
+        self.white_starting_pieces.append(wq1)
         wk = King(self, 'w')
-        white_starting_pieces.append(wk)
+        self.white_starting_pieces.append(wk)
         wb2 = Bishop(self, 'w')
-        white_starting_pieces.append(wb2)
+        self.white_starting_pieces.append(wb2)
         wn2 = Knight(self, 'w')
-        white_starting_pieces.append(wn2)
+        self.white_starting_pieces.append(wn2)
         wr2 = Rook(self, 'w')
-        white_starting_pieces.append(wr2)
+        self.white_starting_pieces.append(wr2)
 
         br1 = Rook(self, 'b')
-        black_starting_pieces.append(br1)
+        self.black_starting_pieces.append(br1)
         bn1 = Knight(self, 'b')
-        black_starting_pieces.append(bn1)
+        self.black_starting_pieces.append(bn1)
         bb1 = Bishop(self, 'b')
-        black_starting_pieces.append(bb1)
+        self.black_starting_pieces.append(bb1)
         bq1 = Queen(self, 'b')
-        black_starting_pieces.append(bq1)
+        self.black_starting_pieces.append(bq1)
         bk = King(self, 'b')
-        black_starting_pieces.append(bk)
+        self.black_starting_pieces.append(bk)
         bb2 = Bishop(self, 'b')
-        black_starting_pieces.append(bb2)
+        self.black_starting_pieces.append(bb2)
         bn2 = Knight(self, 'b')
-        black_starting_pieces.append(bn2)
+        self.black_starting_pieces.append(bn2)
         br2 = Rook(self, 'b')
-        black_starting_pieces.append(br2)
+        self.black_starting_pieces.append(br2)
 
         bp1 = Pawn(self, 'b')
-        black_starting_pieces.append(bp1)
+        self.black_starting_pieces.append(bp1)
         bp2 = Pawn(self, 'b')
-        black_starting_pieces.append(bp2)
+        self.black_starting_pieces.append(bp2)
         bp3 = Pawn(self, 'b')
-        black_starting_pieces.append(bp3)
+        self.black_starting_pieces.append(bp3)
         bp4 = Pawn(self, 'b')
-        black_starting_pieces.append(bp4)
+        self.black_starting_pieces.append(bp4)
         bp5 = Pawn(self, 'b')
-        black_starting_pieces.append(bp5)
+        self.black_starting_pieces.append(bp5)
         bp6 = Pawn(self, 'b')
-        black_starting_pieces.append(bp6)
+        self.black_starting_pieces.append(bp6)
         bp7 = Pawn(self, 'b')
-        black_starting_pieces.append(bp7)
+        self.black_starting_pieces.append(bp7)
         bp8 = Pawn(self, 'b')
-        black_starting_pieces.append(bp8)
+        self.black_starting_pieces.append(bp8)
 
-        for i in range(0, 16):
+    def _new_game_set(self):
+        self.move_list = []
+        self.piece_location = []
+
+        for i in range(0, 16):  # set up starting position
             if i < 8:
                 x = 6 + (i * 8)  # white pawns start at square 6
-                self.piece_location[x] = white_starting_pieces[i]
+                self.piece_location[x] = self.white_starting_pieces[i]
             else:
                 x = 7 + ((i - 8) * 8)  # white pieces start at square 7
-                self.piece_location[x] = white_starting_pieces[i]
+                self.piece_location[x] = self.white_starting_pieces[i]
 
         for i in range(0, 16):
             if i < 8:
                 x = 0 + (i * 8)  # black pieces start from square 0
-                self.piece_location[x] = black_starting_pieces[i]
+                self.piece_location[x] = self.black_starting_pieces[i]
             else:
                 x = 1 + ((i - 8) * 8)  # black pawns start from square 1
-                self.piece_location[x] = black_starting_pieces[i]
+                self.piece_location[x] = self.black_starting_pieces[i]
 
         for i in range(0, 64):
             x = self.piece_location[i]
