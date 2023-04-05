@@ -183,9 +183,9 @@ class Controller:
         print(f"other button clicks: {button}")
         self.view.selector_opening_string_var.set(button)
 
-    def game_board_click(self, button):
+    def game_board_click(self, board, button):
         print(f"game_board click: {button}")
-        x = self.study_board.click(button)
+        x = board.click(button)
         if x is not None:
             print(x)
 

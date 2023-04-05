@@ -124,7 +124,7 @@ class ChessBoard:
                                                         fg_color=square_color
                                                         )
                 self.view.btn.grid(column=x, row=y, padx=0, pady=0, sticky=N + S + E + W)
-                self.view.btn.configure(command=lambda coordinate=btn_name: self.controller.game_board_click(coordinate))
+                self.view.btn.configure(command=lambda coordinate=btn_name: self.controller.game_board_click(self, coordinate))
                 self.coord.append(btn_name)
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
