@@ -228,11 +228,12 @@ class ChessBoard:
         self.black_starting_pieces.append(bp8)
 
     def _new_game_set(self):
-        self.move_list = []
-
-        if (not None) in self.piece_location:  # clear any existing pieces off board
+        if len(self.move_list) > 0 :  # clear any existing pieces off board
+            print("resetting the game board")
+            self.move_list = []
             for i in range(0, 64):
                 self.piece_location[i] = None
+                self.buttons[i].configure(image=self.empty_image)
 
         for i in range(0, 16):  # set up starting position
             if i < 8:

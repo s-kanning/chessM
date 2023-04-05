@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
+
 # TODO: create a reset button to reset the game state to the starting position priority2
 
 class View(customtkinter.CTk):
@@ -204,13 +205,13 @@ class View(customtkinter.CTk):
         self.board_frame = customtkinter.CTkFrame(self.study_frame, height=640, width=640, corner_radius=0)
         self.board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
 
-        # self.chess_board_picture = customtkinter.CTkImage(
-        #     light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\chessboard.png"), size=(600, 600)
-        # )
-        # self.chess_picture = customtkinter.CTkLabel(self.board_frame, image=self.chess_board_picture, text="")
-        # self.chess_picture.pack(side="top", expand=True)
+        self.reset_button = customtkinter.CTkButton(self.study_frame, width=200, corner_radius=20,
+                                                            text="Reset",
+                                                            font=(Font, 20), command=lambda
+                my_button="reset": self.controller.on_button_click(my_button)
+                                                            )
+        self.reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
 
-        #  self.show_container_frame(study_frame, 'study_frame')
 
     def show_main_container_frame(self, cont):
         frame = self.display_frames[cont]
@@ -462,4 +463,3 @@ class View(customtkinter.CTk):
                                               command=lambda button="main_page": self.controller.on_button_click(button)
                                               )
         back_button.grid(row=4, column=0, columnspan=1, padx=140, pady=50)
-

@@ -152,6 +152,9 @@ class Controller:
         if button == 'forwards':  # increase move count, update chessboard
             pass
 
+        if button == 'reset':  # call the reset function from the chessboard
+            self.study_board.reset_board()
+
         if button == 'update_database_entry':
             pass
 
