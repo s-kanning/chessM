@@ -19,18 +19,6 @@ class ChessBoard:
     parent_frame = None
     view = None
 
-    K_image = None
-    k_image = None
-    Q_image = None
-    q_image = None
-    B_image = None
-    b_image = None
-    N_image = None
-    n_image = None
-    R_image = None
-    r_image = None
-    P_image = None
-    p_image = None
     empty_image = None
     image_size = 70
 
@@ -149,6 +137,7 @@ class ChessBoard:
                 self.buttons[ind].configure(image=self.selected_piece.image)
                 self.buttons[ind].configure(text='')
                 self.buttons[self.move_from_ind].configure(image=self.empty_image)
+                self.piece_location[self.move_from_ind] = None
                 self.piece_location[ind] = self.selected_piece
                 move_played = str(self.selected_piece.piece_notation) + str(coordinate)
                 print("move played: " + move_played)
@@ -240,7 +229,6 @@ class ChessBoard:
 
     def _new_game_set(self):
         self.move_list = []
-        self.piece_location = []
 
         for i in range(0, 16):  # set up starting position
             if i < 8:
