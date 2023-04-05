@@ -185,7 +185,9 @@ class Controller:
 
     def game_board_click(self, button):
         print(f"game_board click: {button}")
-
+        x = self.study_board.click(button)
+        if x is not None:
+            print(x)
 
 
 if __name__ == '__main__':

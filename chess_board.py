@@ -44,6 +44,12 @@ class ChessBoard:
         self._new_game_set()
 
     def reset_board(self):
+        if len(self.move_list) > 0:  # clear any existing pieces off board
+            self.move_list = []
+            self.half_move_count = 0
+            for i in range(0, 64):
+                self.piece_location[i] = None
+                self.buttons[i].configure(image=self.empty_image)
         self._new_game_set()
 
     def _connect_chess_images(self):
@@ -118,14 +124,13 @@ class ChessBoard:
                                                         fg_color=square_color
                                                         )
                 self.view.btn.grid(column=x, row=y, padx=0, pady=0, sticky=N + S + E + W)
-                self.view.btn.configure(command=lambda coordinate=btn_name: self.click(coordinate))
+                self.view.btn.configure(command=lambda coordinate=btn_name: self.controller.game_board_click(coordinate))
                 self.coord.append(btn_name)
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
 
     def click(self, coordinate):
         ind = self.coord.index(coordinate)
-        self.controller.game_board_click(coordinate)
 
         if self.selected_piece is not None:  # on click, if exists selected piece, place at square
 
@@ -228,13 +233,6 @@ class ChessBoard:
         self.black_starting_pieces.append(bp8)
 
     def _new_game_set(self):
-        if len(self.move_list) > 0 :  # clear any existing pieces off board
-            print("resetting the game board")
-            self.move_list = []
-            for i in range(0, 64):
-                self.piece_location[i] = None
-                self.buttons[i].configure(image=self.empty_image)
-
         for i in range(0, 16):  # set up starting position
             if i < 8:
                 x = 6 + (i * 8)  # white pawns start at square 6
