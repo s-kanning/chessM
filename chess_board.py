@@ -230,6 +230,10 @@ class ChessBoard:
     def _new_game_set(self):
         self.move_list = []
 
+        if (not None) in self.piece_location:  # clear any existing pieces off board
+            for i in range(0, 64):
+                self.piece_location[i] = None
+
         for i in range(0, 16):  # set up starting position
             if i < 8:
                 x = 6 + (i * 8)  # white pawns start at square 6
