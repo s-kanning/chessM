@@ -154,6 +154,7 @@ class Controller:
 
         if button == 'reset':  # call the reset function from the chessboard
             self.study_board.reset_board()
+            self.view.clear_study_move_list()
 
         if button == 'update_database_entry':
             pass
@@ -183,11 +184,11 @@ class Controller:
         print(f"other button clicks: {button}")
         self.view.selector_opening_string_var.set(button)
 
-    def game_board_click(self, board, button):
+    def game_board_click(self, board, button):  # TODO: connect a specific board to a specific textbox
         print(f"game_board click: {button}")
         x = board.click(button)
         if x is not None:
-            print(x)
+            self.view.update_study_move_list(x[0], x[1])
 
 
 if __name__ == '__main__':

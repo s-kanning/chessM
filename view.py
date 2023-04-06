@@ -9,8 +9,6 @@ customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-# TODO: create a reset button to reset the game state to the starting position priority2
-
 class View(customtkinter.CTk):
 
     def __init__(self, controller):
@@ -172,7 +170,7 @@ class View(customtkinter.CTk):
                                                                 font=(Font, 20)
                                                                 )
         self.study_move_list_textbox.grid(row=1, column=3, rowspan=4, pady=(0, 140), padx=0, sticky="n")
-        self.study_move_list_textbox.insert("0.0", "Move list:")
+        self.study_move_list_textbox.insert("0.0", "Move list: ")
         self.study_move_list_textbox.configure(state="disabled")
 
         self.backward_button = customtkinter.CTkButton(self.study_frame, width=98, corner_radius=20, text="<<",
@@ -206,12 +204,11 @@ class View(customtkinter.CTk):
         self.board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
 
         self.reset_button = customtkinter.CTkButton(self.study_frame, width=200, corner_radius=20,
-                                                            text="Reset",
-                                                            font=(Font, 20), command=lambda
+                                                    text="Reset",
+                                                    font=(Font, 20), command=lambda
                 my_button="reset": self.controller.on_button_click(my_button)
-                                                            )
+                                                    )
         self.reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
-
 
     def show_main_container_frame(self, cont):
         frame = self.display_frames[cont]
@@ -463,3 +460,20 @@ class View(customtkinter.CTk):
                                               command=lambda button="main_page": self.controller.on_button_click(button)
                                               )
         back_button.grid(row=4, column=0, columnspan=1, padx=140, pady=50)
+
+    def update_study_move_list(self, new_move, half_move):
+        self.study_move_list_textbox.configure(state="normal")
+
+        if half_move % 2 != 0:
+            move_count = (int((half_move + 1) / 2))
+            self.study_move_list_textbox.insert('end', str(move_count) + ". ")
+
+        self.study_move_list_textbox.insert('end', new_move + ' ')
+
+        self.study_move_list_textbox.configure(state="disabled")
+
+    def clear_study_move_list(self):
+        self.study_move_list_textbox.configure(state="normal")
+        self.study_move_list_textbox.delete("0.0", "end")
+        self.study_move_list_textbox.insert("0.0", "Move list: ")
+        self.study_move_list_textbox.configure(state="disabled")

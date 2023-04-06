@@ -116,7 +116,7 @@ class ChessBoard:
                 if (x + y) % 2 == 0:
                     square_color = configurations.Light_green
                 else:
-                    square_color = configurations.Blue_green
+                    square_color = configurations.Green
 
                 btn_name = str(column_list[x]) + str(row_list[y])
                 self.view.btn = customtkinter.CTkButton(frame, corner_radius=0, text='', width=button_size,
