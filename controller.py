@@ -9,6 +9,9 @@ class Controller:
     def __init__(self):
         self.model = Model()
         self.view = View(self)
+
+        self.play_board = ChessBoard(view=self.view, controller=self, frame=self.view.play_board_frame)
+        self.play_board.create_everything()
         self.study_board = ChessBoard(view=self.view, controller=self, frame=self.view.board_frame)
         self.study_board.create_everything()
         self.selector_board = ChessBoard(view=self.view, controller=self, frame=self.view.selecting_frame)
@@ -16,6 +19,8 @@ class Controller:
         self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
         self.editor_board.create_everything()
 
+
+        # paired with VIEW 'TO DO' item - button panel edit - add Play
         self.modes = ["play", "study", "create", "inactive"]  # create 'modes' to determine active mode and thus board behavior
         self.app_mode = self.modes[0]
 
@@ -78,8 +83,9 @@ class Controller:
         if button == 'database':
             self.view.show_main_container_frame(self.view.database_frame)
 
-        if button == 'settings':
-            self.view.show_frame(self.view.SettingsPage)
+        if button == 'play':
+            self.view.show_main_container_frame(self.view.play_frame)
+            self.app_mode = self.modes[0]
 
         if button == 'logout':
             self.view.show_frame(self.view.LoginPage)

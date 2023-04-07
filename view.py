@@ -47,6 +47,7 @@ class View(customtkinter.CTk):
         self._populate_selector_frame()
         self._populate_editor_frame()
         self._populate_database_frame()
+        self._populate_play_frame()
 
         self._make_button_panel(self.main_page_display)
         self.MainPage.grid(row=0, column=0, rowspan=2, columnspan=4, sticky="NSEW")
@@ -58,7 +59,7 @@ class View(customtkinter.CTk):
         self.frames = {}
         self.frames[self.LoginPage] = self.LoginPage
         self.frames[self.MainPage] = self.MainPage
-        self.frames[self.SettingsPage] = self.SettingsPage
+        self.frames[self.SettingsPage] = self.SettingsPage  # delete this
 
         # for F in (self.LoginPage,):
         #     frame = F(self.container, self)
@@ -142,6 +143,11 @@ class View(customtkinter.CTk):
                                                   bg_color=Blue_green,
                                                   fg_color=Blue_green, border_color=Light_green
                                                   )
+        self.play_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
+                                                  bg_color=Blue_green,
+                                                  fg_color=Blue_green, border_color=Light_green
+                                                  )
+        self.play_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.study_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.database_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.selector_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
@@ -153,6 +159,7 @@ class View(customtkinter.CTk):
         self.display_frames[self.selector_frame] = self.selector_frame
         self.display_frames[self.editor_frame] = self.editor_frame
         self.display_frames[self.study_frame] = self.study_frame
+        self.display_frames[self.play_frame] = self.play_frame
 
     def _populate_study_frame(self):
         self.study_opening_name = tkinter.StringVar(self.study_frame, "Study"
@@ -209,6 +216,45 @@ class View(customtkinter.CTk):
                 my_button="reset": self.controller.on_button_click(my_button)
                                                     )
         self.reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
+
+    def _populate_play_frame(self):
+        opening_name_label = customtkinter.CTkLabel(self.play_frame, text="",
+                                                    text_color=Light_green,
+                                                    font=(Font, 40),
+                                                    bg_color=Blue_green
+                                                    )
+        opening_name_label.grid(row=0, column=0, columnspan=2, padx=0, pady=(40, 20))
+
+        self.play_move_list_textbox = customtkinter.CTkTextbox(self.play_frame, height=460, width=200,
+                                                               corner_radius=20,
+                                                               text_color=Blue_green,
+                                                               font=(Font, 20)
+                                                               )
+        self.play_move_list_textbox.grid(row=1, column=3, rowspan=4, pady=(0, 140), padx=0, sticky="n")
+        self.play_move_list_textbox.insert("0.0", "Move list: ")
+        self.play_move_list_textbox.configure(state="disabled")
+
+        self.play_backward_button = customtkinter.CTkButton(self.play_frame, width=98, corner_radius=20, text="<<",
+                                                            font=(Font, 20), state="disabled", command=lambda
+                my_button="backwards": self.controller.on_button_click(my_button)
+                                                            )
+        self.play_backward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='nw')
+
+        self.play_forward_button = customtkinter.CTkButton(self.play_frame, width=98, corner_radius=20, text=">>",
+                                                           font=(Font, 20), state="disabled", command=lambda
+                my_button="forwards": self.controller.on_button_click(my_button)
+                                                           )
+        self.play_forward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='ne')
+
+        self.play_board_frame = customtkinter.CTkFrame(self.play_frame, height=640, width=640, corner_radius=0)
+        self.play_board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
+
+        self.play_reset_button = customtkinter.CTkButton(self.play_frame, width=200, corner_radius=20,
+                                                         text="Reset",
+                                                         font=(Font, 20), command=lambda
+                my_button="reset": self.controller.on_button_click(my_button)
+                                                         )
+        self.play_reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
 
     def show_main_container_frame(self, cont):
         frame = self.display_frames[cont]
@@ -331,7 +377,7 @@ class View(customtkinter.CTk):
         editor_label = customtkinter.CTkLabel(self.editor_frame, text="Editor",
                                               text_color=Light_green, font=(Font, 40)
                                               )
-        editor_label.grid(row=0, column=0, padx=40, pady=20, sticky='w')
+        editor_label.grid(row=0, column=0, padx=40, pady=(40, 20), sticky='w')
 
         self.editor_board_frame = customtkinter.CTkFrame(self.editor_frame, height=600, width=600, corner_radius=0)
         self.editor_board_frame.grid(row=1, rowspan=3, columnspan=2, padx=40, pady=0, sticky="EW")
@@ -341,7 +387,7 @@ class View(customtkinter.CTk):
                                                             text_color=Blue_green,
                                                             font=(Font, 20)
                                                             )
-        self.editor_name_textbox.grid(row=0, column=3, pady=(30, 20), padx=0)
+        self.editor_name_textbox.grid(row=0, column=3, pady=(20, 20), padx=0)
         self.editor_name_textbox.insert("0.0", "Opening Name")
 
         self.editor_move_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200, corner_radius=20,
@@ -364,6 +410,7 @@ class View(customtkinter.CTk):
                                                        )
         editor_delete_button.grid(row=3, column=3, padx=0, pady=0, sticky='S')
 
+    # TODO rearrange buttons, include PLAY button, along with frame, remove settings panel?
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
                                               border_width=0,
@@ -410,11 +457,11 @@ class View(customtkinter.CTk):
 
         button4 = customtkinter.CTkButton(button_panel, height=panel_button_height,
                                           width=panel_button_width,
-                                          text="Settings", text_color=Blue_green,
+                                          text="Play", text_color=Blue_green,
                                           corner_radius=20, border_width=0,
                                           fg_color=Light_green, border_color=Green,
                                           font=(Font, panel_button_fontsize),
-                                          command=lambda button="settings": self.controller.on_button_click(button)
+                                          command=lambda button="play": self.controller.on_button_click(button)
                                           )
         button4.grid(row=3, column=0, pady=(0, panel_button_spacingy), sticky='s')
 
@@ -488,4 +535,3 @@ class View(customtkinter.CTk):
     #   self.message_label = ctk.frame(text = "incorrect" bg_color='red', text_color="white")
     #   wait
     #   self.message_label.destroy()
-
