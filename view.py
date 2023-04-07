@@ -466,7 +466,7 @@ class View(customtkinter.CTk):
 
         if half_move % 2 != 0:
             move_count = (int((half_move + 1) / 2))
-            self.study_move_list_textbox.insert('end', str(move_count) + ". ")
+            self.study_move_list_textbox.insert('end', "\n" + str(move_count) + ". ")
 
         self.study_move_list_textbox.insert('end', new_move + ' ')
 
