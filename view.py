@@ -477,3 +477,15 @@ class View(customtkinter.CTk):
         self.study_move_list_textbox.delete("0.0", "end")
         self.study_move_list_textbox.insert("0.0", "Move list: ")
         self.study_move_list_textbox.configure(state="disabled")
+
+    # TODO visual queue - create message pop-up: correct/incorrect - destroy self after 1 sec
+    # def message_correct(self):
+    #   self.message_label = ctk.frame(text = "correct!", bg_color='green', text_color="white")
+    #   wait
+    #   self.message_label.destroy()
+
+    # def message_incorrect(self):
+    #   self.message_label = ctk.frame(text = "incorrect" bg_color='red', text_color="white")
+    #   wait
+    #   self.message_label.destroy()
+
