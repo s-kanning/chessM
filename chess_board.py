@@ -143,15 +143,20 @@ class ChessBoard:
                 self.buttons[ind].configure(text='')
                 self.buttons[self.move_from_ind].configure(image=self.empty_image)
                 self.piece_location[self.move_from_ind] = None
+
+                if self.piece_location[ind] is not None:
+                    move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+                else:
+                    move_played = str(self.selected_piece.piece_notation) + str(coordinate)
                 self.piece_location[ind] = self.selected_piece
-                move_played = str(self.selected_piece.piece_notation) + str(coordinate)
+
                 print("move played: " + move_played)
                 self.selected_piece = None
                 self.move_from_ind = None
-                self.half_move_count += 1  # return move information str(piece_notation + coord)
+                self.half_move_count += 1
                 self.move_list.append(move_played)
 
-                return move_played, self.half_move_count
+                return move_played, self.half_move_count  # return move information str(piece_notation + coord)
 
         elif self.piece_location[ind] is not None:
             self.selected_piece = self.piece_location[ind]  # if no selected piece, select piece
