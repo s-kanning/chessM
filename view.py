@@ -410,7 +410,6 @@ class View(customtkinter.CTk):
                                                        )
         editor_delete_button.grid(row=3, column=3, padx=0, pady=0, sticky='S')
 
-    # TODO rearrange buttons, include PLAY button, along with frame, remove settings panel?
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
                                               border_width=0,
@@ -427,15 +426,25 @@ class View(customtkinter.CTk):
 
         button1 = customtkinter.CTkButton(button_panel, height=panel_button_height,
                                           width=panel_button_width,
+                                          text="Play", text_color=Blue_green,
+                                          corner_radius=20, border_width=0,
+                                          fg_color=Light_green, border_color=Green,
+                                          font=(Font, panel_button_fontsize),
+                                          command=lambda button="play": self.controller.on_button_click(button)
+                                          )
+        button1.grid(row=0, column=0, pady=(0, panel_button_spacingy), sticky='news')
+
+        button2 = customtkinter.CTkButton(button_panel, height=panel_button_height,
+                                          width=panel_button_width,
                                           text="Study", text_color=Blue_green,
                                           corner_radius=20, border_width=0,
                                           fg_color=Light_green, border_color=Green,
                                           font=(Font, panel_button_fontsize),
                                           command=lambda button="selector": self.controller.on_button_click(button)
                                           )
-        button1.grid(row=0, column=0, pady=(0, panel_button_spacingy), sticky='news')
+        button2.grid(row=1, column=0, pady=(0, panel_button_spacingy), sticky='s')
 
-        button2 = customtkinter.CTkButton(button_panel, height=panel_button_height,
+        button3 = customtkinter.CTkButton(button_panel, height=panel_button_height,
                                           width=panel_button_width,
                                           text="Create", text_color=Blue_green,
                                           corner_radius=20, border_width=0,
@@ -443,25 +452,15 @@ class View(customtkinter.CTk):
                                           font=(Font, panel_button_fontsize),
                                           command=lambda button="create": self.controller.on_button_click(button)
                                           )
-        button2.grid(row=1, column=0, pady=(0, panel_button_spacingy), sticky='s')
+        button3.grid(row=2, column=0, pady=(0, panel_button_spacingy), sticky='s')
 
-        button3 = customtkinter.CTkButton(button_panel, height=panel_button_height,
+        button4 = customtkinter.CTkButton(button_panel, height=panel_button_height,
                                           width=panel_button_width,
                                           text="Database", text_color=Blue_green,
                                           corner_radius=20, border_width=0,
                                           fg_color=Light_green, border_color=Green,
                                           font=(Font, panel_button_fontsize),
                                           command=lambda button="database": self.controller.on_button_click(button)
-                                          )
-        button3.grid(row=2, column=0, pady=(0, panel_button_spacingy), sticky='s')
-
-        button4 = customtkinter.CTkButton(button_panel, height=panel_button_height,
-                                          width=panel_button_width,
-                                          text="Play", text_color=Blue_green,
-                                          corner_radius=20, border_width=0,
-                                          fg_color=Light_green, border_color=Green,
-                                          font=(Font, panel_button_fontsize),
-                                          command=lambda button="play": self.controller.on_button_click(button)
                                           )
         button4.grid(row=3, column=0, pady=(0, panel_button_spacingy), sticky='s')
 
