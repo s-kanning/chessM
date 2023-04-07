@@ -16,6 +16,9 @@ class Controller:
         self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
         self.editor_board.create_everything()
 
+        self.modes = ["play", "study", "create", "inactive"]  # create 'modes' to determine active mode and thus board behavior
+        self.app_mode = self.modes[0]
+
     def main(self):
         self.view.main()
 
@@ -31,6 +34,7 @@ class Controller:
                 pass
 
         if button == 'selector':
+            self.app_mode = self.modes[3]
             data = self.model.get_user_openings(self.model.user_id)  # get list of user openings
             #  print(data)
             temp_list = []
@@ -49,6 +53,7 @@ class Controller:
             # take an opening and populate the opening page, get ready to pass information to 'study' button
 
         if button == 'study':
+            self.app_mode = self.modes[1]
             self.view.show_main_container_frame(self.view.study_frame)
 
             opening = self.view.selector_opening_string_var.get()
@@ -86,6 +91,7 @@ class Controller:
             self.view.show_frame(self.view.MainPage)
 
         if button == 'edit_opening':
+            self.app_mode = self.modes[2]
             self.view.show_main_container_frame(self.view.editor_frame)
             opening = self.view.selector_opening_string_var.get()
 
@@ -110,6 +116,7 @@ class Controller:
             print("model active opening moves: " + self.model.active_opening_moves)
 
         if button == 'create':
+            self.app_mode = self.modes[2]
             self.view.show_main_container_frame(self.view.editor_frame)
 
         if button == 'save_changes':  # button found on create/edit frame
@@ -138,10 +145,11 @@ class Controller:
             opening_name = self.view.editor_name_textbox.get("0.0", "end")
             self.model.delete_db_entry(opening_name)
 
-        # TODO: add visual feedback on correct/incorrect answers, update board to play next move -> priority1
+        # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
             if self.view.move_entry.get() == self.model.active_moves_only[self.model.current_move]:
                 print("correct")
+                # call message function
                 self.model.current_move += 2  # move to white's next move
             else:
                 print("incorrect")
@@ -176,19 +184,26 @@ class Controller:
             for item in info:
                 self.view.database_textbox.insert("end", str(item) + "\n")
 
-        if button == 'game_board':
-            print("game_board: click")
-            pass
+        # if button == 'game_board':
+        #     print("game_board: click")
+        #     pass
 
     def other_button_clicks(self, button):
         print(f"other button clicks: {button}")
         self.view.selector_opening_string_var.set(button)
 
-    def game_board_click(self, board, button):  # TODO: connect a specific board to a specific textbox
-        print(f"game_board click: {button}")
-        x = board.click(button)
-        if x is not None:
-            self.view.update_study_move_list(x[0], x[1])
+    def game_board_click(self, board, button):  # TODO: connect a specific board to a specific textbox - through use of 'modes'
+        if self.app_mode == self.modes[0]:
+            print(self.modes[0])
+            x = board.click(button)
+            if x is not None:
+                self.view.update_study_move_list(x[0], x[1])
+        elif self.app_mode == self.modes[1]:
+            print(self.modes[1])
+            pass
+        elif self.app_mode == self.modes[2]:
+            print(self.modes[2])
+            pass
 
 
 if __name__ == '__main__':
