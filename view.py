@@ -52,14 +52,14 @@ class View(customtkinter.CTk):
         self._make_button_panel(self.main_page_display)
         self.MainPage.grid(row=0, column=0, rowspan=2, columnspan=4, sticky="NSEW")
 
-        self._make_settings_page()
-        self.SettingsPage.grid(row=0, column=0, rowspan=2, columnspan=4, sticky="NSEW")
+        # self._make_settings_page()
+        # self.SettingsPage.grid(row=0, column=0, rowspan=2, columnspan=4, sticky="NSEW")
 
         # initializing frames to an empty array
         self.frames = {}
         self.frames[self.LoginPage] = self.LoginPage
         self.frames[self.MainPage] = self.MainPage
-        self.frames[self.SettingsPage] = self.SettingsPage  # delete this
+        # self.frames[self.SettingsPage] = self.SettingsPage  # delete this
 
         # for F in (self.LoginPage,):
         #     frame = F(self.container, self)
@@ -474,38 +474,37 @@ class View(customtkinter.CTk):
                                                 )
         logout_button.grid(row=4, column=0, sticky='s')
 
-    def _make_settings_page(self):
-        self.SettingsPage = customtkinter.CTkFrame(self.container, border_width=20, corner_radius=0,
-                                                   border_color=Light_green,
-                                                   fg_color=Blue_green
-                                                   )
-        settings_page_display = customtkinter.CTkFrame(self.SettingsPage, corner_radius=40, height=1100, width=580,
-                                                       fg_color=Green,
-                                                       border_width=10,
-                                                       border_color=Light_green
-                                                       )
-
-        settings_page_display.pack(pady=0, padx=0, side="top", expand=True)
-
-        # TODO: add functionality to SETTINGS page ->priority1
-        label1 = customtkinter.CTkLabel(settings_page_display, text="Label1",
-                                        font=(Font, 20), bg_color='white'
-                                        )
-        label1.grid(row=0, column=0, pady=20)
-        label2 = customtkinter.CTkLabel(settings_page_display, text="Label2",
-                                        font=(Font, 20), bg_color='white'
-                                        )
-        label2.grid(row=1, column=0, pady=20)
-        label3 = customtkinter.CTkLabel(settings_page_display, text="Label3",
-                                        font=(Font, 20), bg_color='white'
-                                        )
-        label3.grid(row=2, column=0, pady=20)
-
-        back_button = customtkinter.CTkButton(settings_page_display, corner_radius=100, text="Back",
-                                              font=(Font, 20),
-                                              command=lambda button="main_page": self.controller.on_button_click(button)
-                                              )
-        back_button.grid(row=4, column=0, columnspan=1, padx=140, pady=50)
+    # def _make_settings_page(self):
+    #     self.SettingsPage = customtkinter.CTkFrame(self.container, border_width=20, corner_radius=0,
+    #                                                border_color=Light_green,
+    #                                                fg_color=Blue_green
+    #                                                )
+    #     settings_page_display = customtkinter.CTkFrame(self.SettingsPage, corner_radius=40, height=1100, width=580,
+    #                                                    fg_color=Green,
+    #                                                    border_width=10,
+    #                                                    border_color=Light_green
+    #                                                    )
+    #
+    #     settings_page_display.pack(pady=0, padx=0, side="top", expand=True)
+    #
+    #     label1 = customtkinter.CTkLabel(settings_page_display, text="Label1",
+    #                                     font=(Font, 20), bg_color='white'
+    #                                     )
+    #     label1.grid(row=0, column=0, pady=20)
+    #     label2 = customtkinter.CTkLabel(settings_page_display, text="Label2",
+    #                                     font=(Font, 20), bg_color='white'
+    #                                     )
+    #     label2.grid(row=1, column=0, pady=20)
+    #     label3 = customtkinter.CTkLabel(settings_page_display, text="Label3",
+    #                                     font=(Font, 20), bg_color='white'
+    #                                     )
+    #     label3.grid(row=2, column=0, pady=20)
+    #
+    #     back_button = customtkinter.CTkButton(settings_page_display, corner_radius=100, text="Back",
+    #                                           font=(Font, 20),
+    #                                           command=lambda button="main_page": self.controller.on_button_click(button)
+    #                                           )
+    #     back_button.grid(row=4, column=0, columnspan=1, padx=140, pady=50)
 
     def update_study_move_list(self, new_move, half_move):
         self.study_move_list_textbox.configure(state="normal")
