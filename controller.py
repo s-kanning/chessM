@@ -2,6 +2,14 @@
 from view import View
 from model import Model
 from chess_board import ChessBoard
+from enum import Enum, auto
+
+
+class ChessMode(Enum):
+    PLAY = auto()
+    STUDY = auto()
+    CREATE = auto()
+    INACTIVE = auto()
 
 
 class Controller:
@@ -19,10 +27,7 @@ class Controller:
         self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
         self.editor_board.create_everything()
 
-
-        # paired with VIEW 'TO DO' item - button panel edit - add Play
-        self.modes = ["play", "study", "create", "inactive"]  # create 'modes' to determine active mode and thus board behavior
-        self.app_mode = self.modes[0]
+        self.app_mode = ChessMode.PLAY  # create enum 'modes' to determine active mode and thus board behavior
 
     def main(self):
         self.view.main()
@@ -39,7 +44,7 @@ class Controller:
                 pass
 
         if button == 'selector':
-            self.app_mode = self.modes[3]
+            self.app_mode = ChessMode.INACTIVE
             data = self.model.get_user_openings(self.model.user_id)  # get list of user openings
             #  print(data)
             temp_list = []
@@ -58,7 +63,7 @@ class Controller:
             # take an opening and populate the opening page, get ready to pass information to 'study' button
 
         if button == 'study':
-            self.app_mode = self.modes[1]
+            self.app_mode = ChessMode.STUDY
             self.view.show_main_container_frame(self.view.study_frame)
 
             opening = self.view.selector_opening_string_var.get()
@@ -85,7 +90,7 @@ class Controller:
 
         if button == 'play':
             self.view.show_main_container_frame(self.view.play_frame)
-            self.app_mode = self.modes[0]
+            self.app_mode = ChessMode.PLAY
 
         if button == 'logout':
             self.view.show_frame(self.view.LoginPage)
@@ -97,7 +102,7 @@ class Controller:
             self.view.show_frame(self.view.MainPage)
 
         if button == 'edit_opening':
-            self.app_mode = self.modes[2]
+            self.app_mode = ChessMode.CREATE
             self.view.show_main_container_frame(self.view.editor_frame)
             opening = self.view.selector_opening_string_var.get()
 
@@ -114,15 +119,15 @@ class Controller:
             self.model.active_opening_moves = active_opening_moves
 
             #  set the move list in the text box
-            self.view.editor_move_textbox.delete("0.0", "end")
-            self.view.editor_move_textbox.insert("0.0", active_opening_moves)
+            self.view.editor_move_list_textbox.delete("0.0", "end")
+            self.view.editor_move_list_textbox.insert("0.0", active_opening_moves)
             self.model.active_opening_name = opening
 
             print("model active opening name: " + self.model.active_opening_name)
             print("model active opening moves: " + self.model.active_opening_moves)
 
         if button == 'create':
-            self.app_mode = self.modes[2]
+            self.app_mode = ChessMode.CREATE
             self.view.show_main_container_frame(self.view.editor_frame)
 
         if button == 'save_changes':  # button found on create/edit frame
@@ -138,11 +143,11 @@ class Controller:
                                                                  )  # "1.0",'end-1c' is necessary to remove the last character, otherwise a new line is added,
                 print("Updated entry: " + opening_name)
 
-                move_list = self.view.editor_move_textbox.get("1.0", 'end-1c')
+                move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
                 self.model.edit_db_entry(opening_name, move_list)
             else:
                 opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
-                move_list = self.view.editor_move_textbox.get("1.0", 'end-1c')
+                move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
                 self.model.create_db_entry(self.model.user_id, opening_name, move_list)
                 print("Created new entry: " + opening_name)
 
@@ -166,9 +171,8 @@ class Controller:
         if button == 'forwards':  # increase move count, update chessboard
             pass
 
-        if button == 'reset':  # call the reset function from the chessboard
-            self.study_board.reset_board()
-            self.view.clear_study_move_list()
+        if button == 'reset':  # call the reset function
+            self.reset_move_list_textbox()
 
         if button == 'update_database_entry':
             pass
@@ -198,17 +202,39 @@ class Controller:
         print(f"other button clicks: {button}")
         self.view.selector_opening_string_var.set(button)
 
-    def game_board_click(self, board, button):  # TODO: connect a specific board to a specific textbox - through use of 'modes'
-        if self.app_mode == self.modes[0]:
-            print(self.modes[0])
-            x = board.click(button)
-            if x is not None:
-                self.view.update_study_move_list(x[0], x[1])
-        elif self.app_mode == self.modes[1]:
-            print(self.modes[1])
+    def game_board_click(self, board, button):
+        print(self.app_mode)
+        player_move = board.click(button)
+        if player_move is not None:
+            self.update_move_list_textbox(player_move)
+
+    def update_move_list_textbox(self, player_move):
+        if self.app_mode == ChessMode.PLAY:
+            self.view.update_play_move_list(player_move[0], player_move[1])
+
+        elif self.app_mode == ChessMode.STUDY:
+            self.view.update_study_move_list(player_move[0], player_move[1])
+
+        elif self.app_mode == ChessMode.CREATE:
+            self.view.update_create_move_list(player_move[0], player_move[1])
+
+        elif self.app_mode == ChessMode.INACTIVE:
             pass
-        elif self.app_mode == self.modes[2]:
-            print(self.modes[2])
+
+    def reset_move_list_textbox(self):
+        if self.app_mode == ChessMode.PLAY:
+            self.view.clear_play_move_list()
+            self.play_board.reset_board()
+
+        elif self.app_mode == ChessMode.STUDY:
+            self.view.clear_study_move_list()
+            self.study_board.reset_board()
+
+        elif self.app_mode == ChessMode.CREATE:
+            self.view.clear_create_move_list()
+            self.editor_board.reset_board()
+
+        elif self.app_mode == ChessMode.INACTIVE:
             pass
 
 

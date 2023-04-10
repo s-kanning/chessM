@@ -390,12 +390,12 @@ class View(customtkinter.CTk):
         self.editor_name_textbox.grid(row=0, column=3, pady=(20, 20), padx=0)
         self.editor_name_textbox.insert("0.0", "Opening Name")
 
-        self.editor_move_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200, corner_radius=20,
-                                                            text_color=Blue_green,
-                                                            font=(Font, 20)
-                                                            )
-        self.editor_move_textbox.grid(row=1, column=3, rowspan=4, pady=(0, 10), padx=0, sticky="n")
-        self.editor_move_textbox.insert("0.0", "edit")
+        self.editor_move_list_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200, corner_radius=20,
+                                                                 text_color=Blue_green,
+                                                                 font=(Font, 20)
+                                                                 )
+        self.editor_move_list_textbox.grid(row=1, column=3, rowspan=4, pady=(0, 10), padx=0, sticky="n")
+        self.editor_move_list_textbox.insert("0.0", "edit")
 
         editor_save_button = customtkinter.CTkButton(self.editor_frame, width=200, corner_radius=20,
                                                      text="Save changes",
@@ -522,6 +522,41 @@ class View(customtkinter.CTk):
         self.study_move_list_textbox.delete("0.0", "end")
         self.study_move_list_textbox.insert("0.0", "Move list: ")
         self.study_move_list_textbox.configure(state="disabled")
+
+    def update_play_move_list(self, new_move, half_move):
+        self.play_move_list_textbox.configure(state="normal")
+
+        if half_move % 2 != 0:
+            move_count = (int((half_move + 1) / 2))
+            self.play_move_list_textbox.insert('end', "\n" + str(move_count) + ". ")
+
+        self.play_move_list_textbox.insert('end', new_move + ' ')
+
+        self.play_move_list_textbox.configure(state="disabled")
+
+    def clear_play_move_list(self):
+        self.play_move_list_textbox.configure(state="normal")
+        self.play_move_list_textbox.delete("0.0", "end")
+        self.play_move_list_textbox.insert("0.0", "Move list: ")
+        self.play_move_list_textbox.configure(state="disabled")
+
+
+    def update_create_move_list(self, new_move, half_move):
+        self.editor_move_list_textbox.configure(state="normal")
+
+        if half_move % 2 != 0:
+            move_count = (int((half_move + 1) / 2))
+            self.editor_move_list_textbox.insert('end', "\n" + str(move_count) + ". ")
+
+        self.editor_move_list_textbox.insert('end', new_move + ' ')
+
+        self.editor_move_list_textbox.configure(state="disabled")
+
+    def clear_create_move_list(self):
+        self.editor_move_list_textbox.configure(state="normal")
+        self.editor_move_list_textbox.delete("0.0", "end")
+        self.editor_move_list_textbox.insert("0.0", "Move list: ")
+        self.editor_move_list_textbox.configure(state="disabled")
 
     # TODO visual queue - create message pop-up: correct/incorrect - destroy self after 1 sec
     # def message_correct(self):
