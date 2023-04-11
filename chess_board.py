@@ -13,6 +13,12 @@ import configurations
 # TODO: add functionality of view buttons to cycle through move list -> priority2
 #        separate list of moves necessary?
 
+# TODO: create rules for piece movement
+
+# TODO: create ability to castle O-O, O-O-O
+
+# TODO: create ability to play 'en passant'
+
 
 class ChessBoard:
     controller = None
