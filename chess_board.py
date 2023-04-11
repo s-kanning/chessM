@@ -42,6 +42,8 @@ class ChessBoard:
         self.move_from_ind = None
         self.half_move_count = 0
 
+        self.game_state_stack = []  # TODO: add this to database entry
+
     def create_everything(self):
 
         self._connect_chess_images()
@@ -57,6 +59,7 @@ class ChessBoard:
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
         self._new_game_set()
+
 
     def _connect_chess_images(self):
         self.K_image = customtkinter.CTkImage(
@@ -161,6 +164,10 @@ class ChessBoard:
                 self.move_from_ind = None
                 self.half_move_count += 1
                 self.move_list.append(move_played)
+
+                # TODO: game state stack is full of only the most recent position
+                self.game_state_stack.append(self.piece_location)  # save game state
+                print(self.game_state_stack)
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)
 
@@ -268,6 +275,25 @@ class ChessBoard:
                 self.buttons[i].configure(text="")
             else:
                 pass  # to skip the empty squares
+        self.game_state_stack.append(self.piece_location)
+
+    def game_state_append(self, state):  # necessary?
+        self.game_state_stack.append(state)
+
+    def game_state_pop(self, state):  # necessary?
+        self.game_state_stack.pop(state)
+
+    def set_to_game_state(self, index):
+        state = self.game_state_stack[index]
+        self.piece_location = state
+        for i in range(0, 64):
+            if self.piece_location[i] is not None:
+                print(self.piece_location[i].piece_notation)
+                self.buttons[i].configure(image=self.piece_location[i].image)
+            else:
+                print("set image to empty")
+                self.buttons[i].configure(image=self.empty_image)
+
 
 
 class King:
