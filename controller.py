@@ -162,6 +162,7 @@ class Controller:
                 print("correct")
                 # call message function
                 self.model.current_move += 2  # move to white's next move
+                self.view.move_entry.delete('0', 'end')
             else:
                 print("incorrect")
 
@@ -205,8 +206,28 @@ class Controller:
     def game_board_click(self, board, button):
         print(self.app_mode)
         player_move = board.click(button)
+
         if player_move is not None:
             self.update_move_list_textbox(player_move)
+
+            if self.app_mode == ChessMode.PLAY:
+                pass
+            elif self.app_mode == ChessMode.STUDY:
+                # entry box.delete()
+                self.view.move_entry.delete('0', 'end')
+                # entry box.insert()
+                self.view.move_entry.insert('0', str(player_move[0]))
+
+
+
+            elif self.app_mode == ChessMode.CREATE:
+                pass
+            elif self.app_mode == ChessMode.INACTIVE:
+                pass
+
+
+
+
 
     def update_move_list_textbox(self, player_move):
         if self.app_mode == ChessMode.PLAY:
@@ -229,6 +250,7 @@ class Controller:
         elif self.app_mode == ChessMode.STUDY:
             self.view.clear_study_move_list()
             self.study_board.reset_board()
+            self.view.move_entry.delete('0', 'end')
 
         elif self.app_mode == ChessMode.CREATE:
             self.view.clear_create_move_list()
