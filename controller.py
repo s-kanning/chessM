@@ -167,6 +167,7 @@ class Controller:
                 print("incorrect")
 
         if button == 'backwards':  # decrease move count, update chessboard
+            self.study_board.set_to_game_state(1)
             pass
 
         if button == 'forwards':  # increase move count, update chessboard
