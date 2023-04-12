@@ -275,7 +275,8 @@ class ChessBoard:
                 self.buttons[i].configure(text="")
             else:
                 pass  # to skip the empty squares
-        self.game_state_stack.append(self.piece_location)
+
+        self.game_state_stack.append(list(self.piece_location))
 
     def game_state_append(self, state):  # necessary?
         self.game_state_stack.append(state)
