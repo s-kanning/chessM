@@ -166,11 +166,11 @@ class Controller:
             else:
                 print("incorrect")
 
-        if button == 'backwards':  # decrease move count, update chessboard
+        if button == 'backwards':  # decrease board.move_view_count, update chessboard
             self.study_board.set_to_game_state(1)
             pass
 
-        if button == 'forwards':  # increase move count, update chessboard
+        if button == 'forwards':  # increase board.move_view_count, update chessboard
             pass
 
         if button == 'reset':  # call the reset function
@@ -205,7 +205,9 @@ class Controller:
         self.view.selector_opening_string_var.set(button)
 
     def game_board_click(self, board, button):
-        print(self.app_mode)
+        # if board.half_move_view_count != board.half_move_count:
+        #     pass
+        # else:
         player_move = board.click(button)
 
         if player_move is not None:
