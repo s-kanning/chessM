@@ -166,7 +166,7 @@ class ChessBoard:
                 self.move_list.append(move_played)
 
                 # TODO: game state stack is full of only the most recent position
-                self.game_state_stack.append(self.piece_location)  # save game state
+                self.game_state_stack.append(list(self.piece_location))  # save game state
                 print(self.game_state_stack)
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)
@@ -283,7 +283,7 @@ class ChessBoard:
     def game_state_pop(self, state):  # necessary?
         self.game_state_stack.pop(state)
 
-    def set_to_game_state(self, index):
+    def set_to_game_state(self, index):  # TODO: also edit the related text box
         state = self.game_state_stack[index]
         self.piece_location = state
         for i in range(0, 64):
