@@ -41,6 +41,7 @@ class ChessBoard:
         self.selected_piece = None
         self.move_from_ind = None
         self.half_move_count = 0
+        self.half_move_view_count = 0
 
         self.game_state_stack = []  # TODO: add this to database entry
 
@@ -59,7 +60,6 @@ class ChessBoard:
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
         self._new_game_set()
-
 
     def _connect_chess_images(self):
         self.K_image = customtkinter.CTkImage(
@@ -133,7 +133,9 @@ class ChessBoard:
                                                         fg_color=square_color
                                                         )
                 self.view.btn.grid(column=x, row=y, padx=0, pady=0, sticky=N + S + E + W)
-                self.view.btn.configure(command=lambda coordinate=btn_name: self.controller.game_board_click(self, coordinate))
+                self.view.btn.configure(
+                    command=lambda coordinate=btn_name: self.controller.game_board_click(self, coordinate)
+                    )
                 self.coord.append(btn_name)
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
@@ -287,14 +289,12 @@ class ChessBoard:
     def set_to_game_state(self, index):  # TODO: also edit the related text box
         state = self.game_state_stack[index]
         self.piece_location = state
+        # consider making statement if piece_location[i] == state[i] pass, move self.piece_location = state to after for statement
         for i in range(0, 64):
             if self.piece_location[i] is not None:
-                print(self.piece_location[i].piece_notation)
                 self.buttons[i].configure(image=self.piece_location[i].image)
             else:
-                print("set image to empty")
                 self.buttons[i].configure(image=self.empty_image)
-
 
 
 class King:
