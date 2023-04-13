@@ -50,15 +50,15 @@ class Model:
         query = db_connection.query_db_openings(self, id_number)
         return query
 
-    def create_db_entry(self, user_number, name_of_opening, list_of_moves):
+    def create_db_entry(self, user_number, name_of_opening, list_of_moves, game_stack):
         print("called: create_db_entry")
         new_entry = [user_number, name_of_opening,
-                     list_of_moves]  # entry = [user_number, name_of_opening, list_of_moves]
+                     list_of_moves, game_stack]  # entry = [user_number, name_of_opening, list_of_moves, game_stack]
         db_connection.create_new_entry(self, new_entry)
 
-    def edit_db_entry(self, opening_name, list_of_moves):
+    def edit_db_entry(self, opening_name, list_of_moves, game_stack):
         print("called: edit_db_entry")
-        db_connection.edit_db_entry(self, opening_name, list_of_moves)
+        db_connection.edit_db_entry(self, opening_name, list_of_moves, game_stack)
 
     def delete_db_entry(self, opening_name):
         print("called: delete_db_entry")

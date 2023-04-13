@@ -23,7 +23,7 @@ import sqlite3
 # user_number = 2
 # name_of_opening = "Evans Gambit"
 # list_of_moves = "1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. b4 Bxb4 5. c3"
-# entry = [user_number, name_of_opening, list_of_moves]
+# entry = [user_number, name_of_opening, list_of_moves, game_stack]
 
 # c.execute('''
 # UPDATE users
@@ -37,7 +37,11 @@ import sqlite3
 #           )
 # conn.commit()
 
-# # c.execute("INSERT INTO openings VALUES (?,?,?)", entry)
+# addColumn = "ALTER TABLE openings ADD COLUMN game_stack text"
+# c.execute(addColumn)
+#
+# # c.execute("INSERT INTO openings VALUES (?,?,?, ?)", entry)
+
 # print("executed")
 # # c.executemany("INSERT INTO users VALUES (?,?)", #list_var)
 #
@@ -46,12 +50,12 @@ import sqlite3
 # # # c.fetchone() # returns first
 # # # c.fetchmany(3)
 # data = c.fetchall()
-#
+
 # # #print("Username : Password")
 # for item in data:
 #     #print(item[0] + " : " + item[1])
 #     print(item)
-#
+
 # # commit our command
 # conn.commit()
 # # close connection
@@ -71,25 +75,27 @@ class DbConnection:
         self.my_conn.close()
         return data
 
-    def create_new_entry(self, entry):  # entry = [user_number, name_of_opening, list_of_moves]
+    def create_new_entry(self, entry):  # entry = [user_number, name_of_opening, list_of_moves, game_stack] # add game_stack
         self.my_conn = sqlite3.connect('chess_database.db')
         self.my_c = self.my_conn.cursor()
-        self.my_c.execute("INSERT INTO openings VALUES (?,?,?)", entry)
+        self.my_c.execute("INSERT INTO openings VALUES (?,?,?,?)", entry)
         self.my_conn.commit()
         self.my_conn.close()
 
-    def edit_db_entry(self, opening_name, move_list):
+    def edit_db_entry(self, opening_name, move_list, game_stack):
         self.my_conn = sqlite3.connect('chess_database.db')
         self.my_c = self.my_conn.cursor()
         self.my_c.execute('''UPDATE openings SET
         opening_name = :opening_name,
         move_list = :move_list
+        game_stack = :game_stack
 
         WHERE
         opening_name = :opening_name''',
                           {
                               'opening_name': opening_name,
-                              'move_list': move_list
+                              'move_list': move_list,
+                              'game_stack': game_stack
                           }
                           )
         self.my_conn.commit()
