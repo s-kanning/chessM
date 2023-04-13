@@ -148,7 +148,8 @@ class Controller:
             else:
                 opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
                 move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
-                self.model.create_db_entry(self.model.user_id, opening_name, move_list)
+                game_stack = str(self.editor_board.game_state_stack)
+                self.model.create_db_entry(self.model.user_id, opening_name, move_list, game_stack)
                 print("Created new entry: " + opening_name)
 
         if button == 'delete':  # button found on create/edit frame
@@ -160,11 +161,17 @@ class Controller:
         if button == 'submit':  # check user input against move list
             if self.view.move_entry.get() == self.model.active_moves_only[self.model.current_move]:
                 print("correct")
-                # call message function
+                player_move = self.view.move_entry.get(), self.study_board.half_move_count
+                print(player_move)
+                self.update_move_list_textbox(player_move)
                 self.model.current_move += 2  # move to white's next move
                 self.view.move_entry.delete('0', 'end')
             else:
                 print("incorrect")
+                self.view.move_entry.delete('0', 'end')
+                self.study_board.half_move_view_count -= 1
+                self.study_board.half_move_count -= 1
+                self.study_board.set_to_game_state(self.study_board.half_move_view_count)
 
         if button == 'backwards':  # decrease board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
@@ -191,7 +198,6 @@ class Controller:
                 pass
             else:
                 pass
-
 
         if button == 'forwards':  # increase board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
@@ -250,22 +256,20 @@ class Controller:
         if board.half_move_view_count != board.half_move_count:
             pass
         else:
-            player_move = board.play_move(button)
+            if self.app_mode is ChessMode.INACTIVE:
+                pass
+            else:
+                player_move = board.play_move(button)
 
-            if player_move is not None:
-                self.update_move_list_textbox(player_move)
-
-                if self.app_mode == ChessMode.PLAY:
-                    pass
-                elif self.app_mode == ChessMode.STUDY:
-                    # entry box.delete()
-                    self.view.move_entry.delete('0', 'end')
-                    # entry box.insert()
-                    self.view.move_entry.insert('0', str(player_move[0]))
-                elif self.app_mode == ChessMode.CREATE:
-                    pass
-                elif self.app_mode == ChessMode.INACTIVE:
-                    pass
+                if player_move is not None:
+                    if self.app_mode == ChessMode.PLAY:
+                        self.update_move_list_textbox(player_move)
+                    elif self.app_mode == ChessMode.STUDY:
+                        self.view.move_entry.delete('0', 'end')
+                        self.view.move_entry.insert('0', str(player_move[0]))
+                    elif self.app_mode == ChessMode.CREATE:
+                        self.update_move_list_textbox(player_move)
+                        pass
 
     def update_move_list_textbox(self, player_move):
         if self.app_mode == ChessMode.PLAY:
@@ -296,8 +300,6 @@ class Controller:
 
         elif self.app_mode == ChessMode.INACTIVE:
             pass
-
-
 
 
 if __name__ == '__main__':
