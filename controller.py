@@ -81,7 +81,7 @@ class Controller:
             print("model active opening moves: " + self.model.active_opening_moves)
 
             self.model.active_moves_only = self.model.format_move_list(self.model.active_opening_moves)
-            self.model.current_move = 0
+            # self.model.current_move = 0
             print("active moves only: ")
             print(self.model.active_moves_only)
 
@@ -159,12 +159,12 @@ class Controller:
 
         # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
-            if self.view.move_entry.get() == self.model.active_moves_only[self.model.current_move]:
+            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.half_move_view_count - 1]:  # -1 for 0 indexing
                 print("correct")
                 player_move = self.view.move_entry.get(), self.study_board.half_move_count
                 print(player_move)
                 self.update_move_list_textbox(player_move)
-                self.model.current_move += 2  # move to white's next move
+                # self.model.current_move += 2  # move to white's next move
                 self.view.move_entry.delete('0', 'end')
             else:
                 print("incorrect")

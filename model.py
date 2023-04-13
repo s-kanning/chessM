@@ -12,7 +12,7 @@ class Model:
         self.active_opening_name = ''
         self.active_opening_moves = ''
         self.users_openings = []
-        self.current_move = 0
+        # self.current_move = 0
         self.active_moves_only = []
 
     def login(self, username, password):
