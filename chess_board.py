@@ -140,7 +140,7 @@ class ChessBoard:
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
 
-    def click(self, coordinate):
+    def play_move(self, coordinate):
         ind = self.coord.index(coordinate)
 
         if self.selected_piece is not None:  # on click, if exists selected piece, place at square
@@ -286,7 +286,7 @@ class ChessBoard:
     def game_state_pop(self, state):  # necessary?
         self.game_state_stack.pop(state)
 
-    def set_to_game_state(self, index):  # TODO: also edit the related text box
+    def set_to_game_state(self, index=int):  # TODO: also edit the related text box
         state = self.game_state_stack[index]
         self.piece_location = state
         # consider making statement if piece_location[i] == state[i] pass, move self.piece_location = state to after for statement

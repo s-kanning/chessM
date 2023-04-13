@@ -208,7 +208,7 @@ class Controller:
         # if board.half_move_view_count != board.half_move_count:
         #     pass
         # else:
-        player_move = board.click(button)
+        player_move = board.play_move(button)
 
         if player_move is not None:
             self.update_move_list_textbox(player_move)
