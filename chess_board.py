@@ -280,19 +280,19 @@ class ChessBoard:
 
         self.game_state_stack.append(list(self.piece_location))
 
-    def game_state_append(self, state):  # necessary?
-        self.game_state_stack.append(state)
-
-    def game_state_pop(self, state):  # necessary?
-        self.game_state_stack.pop(state)
+    # def game_state_append(self, state):  # necessary?
+    #     self.game_state_stack.append(state)
+    #
+    # def game_state_pop(self, state):  # necessary?
+    #     self.game_state_stack.pop(state)
 
     def set_to_game_state(self, index=int):  # TODO: also edit the related text box
         state = self.game_state_stack[index]
-        self.piece_location = state
+        temp_state = state
         # consider making statement if piece_location[i] == state[i] pass, move self.piece_location = state to after for statement
         for i in range(0, 64):
-            if self.piece_location[i] is not None:
-                self.buttons[i].configure(image=self.piece_location[i].image)
+            if temp_state[i] is not None:
+                self.buttons[i].configure(image=temp_state[i].image)
             else:
                 self.buttons[i].configure(image=self.empty_image)
 
