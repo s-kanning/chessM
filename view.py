@@ -8,6 +8,9 @@ from PIL import ImageTk, Image
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
+# Thoughts for later, reduce login screen, save stuff to minimize work for user
+# Reduce size of buttons on the side, main thing to be clicked is board
+# make size scalable
 
 class View(customtkinter.CTk):
 
@@ -235,13 +238,13 @@ class View(customtkinter.CTk):
         self.play_move_list_textbox.configure(state="disabled")
 
         self.play_backward_button = customtkinter.CTkButton(self.play_frame, width=98, corner_radius=20, text="<<",
-                                                            font=(Font, 20), state="disabled", command=lambda
+                                                            font=(Font, 20), command=lambda
                 my_button="backwards": self.controller.on_button_click(my_button)
                                                             )
         self.play_backward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='nw')
 
         self.play_forward_button = customtkinter.CTkButton(self.play_frame, width=98, corner_radius=20, text=">>",
-                                                           font=(Font, 20), state="disabled", command=lambda
+                                                           font=(Font, 20), command=lambda
                 my_button="forwards": self.controller.on_button_click(my_button)
                                                            )
         self.play_forward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='ne')
