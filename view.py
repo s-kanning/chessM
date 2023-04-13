@@ -187,7 +187,7 @@ class View(customtkinter.CTk):
         self.backward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='nw')
 
         self.forward_button = customtkinter.CTkButton(self.study_frame, width=98, corner_radius=20, text=">>",
-                                                      font=(Font, 20), state="disabled", command=lambda
+                                                      font=(Font, 20), command=lambda
                 my_button="forwards": self.controller.on_button_click(my_button)
                                                       )
         self.forward_button.grid(row=4, column=3, padx=0, pady=(60, 0), sticky='ne')
