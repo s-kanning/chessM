@@ -56,9 +56,11 @@ class ChessBoard:
         if len(self.move_list) > 0:  # clear any existing pieces off board
             self.move_list.clear()
             self.half_move_count = 0
+            self.half_move_view_count = 0
             for i in range(0, 64):
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
+        self.game_state_stack.clear()
         self._new_game_set()
 
     def _connect_chess_images(self):
