@@ -54,7 +54,7 @@ class ChessBoard:
 
     def reset_board(self):
         if len(self.move_list) > 0:  # clear any existing pieces off board
-            self.move_list = []
+            self.move_list.clear()
             self.half_move_count = 0
             for i in range(0, 64):
                 self.piece_location[i] = None
@@ -143,7 +143,7 @@ class ChessBoard:
     def play_move(self, coordinate):
         ind = self.coord.index(coordinate)
 
-        if self.selected_piece is not None:  # on click, if exists selected piece, place at square
+        if self.selected_piece is not None:  # if exists selected piece, place at square
 
             if self.move_from_ind == ind:  # set selected piece to None
                 self.selected_piece = None
@@ -165,11 +165,11 @@ class ChessBoard:
                 self.selected_piece = None
                 self.move_from_ind = None
                 self.half_move_count += 1
+                self.half_move_view_count = int(self.half_move_count)
                 self.move_list.append(move_played)
 
                 # TODO: game state stack is full of only the most recent position
                 self.game_state_stack.append(list(self.piece_location))  # save game state
-                print(self.game_state_stack)
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)
 
