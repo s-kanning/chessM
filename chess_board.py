@@ -41,7 +41,7 @@ class ChessBoard:
         self.selected_piece = None
         self.move_from_ind = None
         self.half_move_count = 0
-        self.half_move_view_count = 0
+        self.view_count = 0
 
         self.game_state_stack = []  # TODO: add this to database entry
 
@@ -56,7 +56,7 @@ class ChessBoard:
         if len(self.move_list) > 0:  # clear any existing pieces off board
             self.move_list.clear()
             self.half_move_count = 0
-            self.half_move_view_count = 0
+            self.view_count = 0
             for i in range(0, 64):
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
@@ -168,11 +168,9 @@ class ChessBoard:
                 self.selected_piece = None
                 self.move_from_ind = None
                 self.half_move_count += 1  # TODO replace this with just using len(game_stack) - viable for play, not for study
-                self.half_move_view_count = int(self.half_move_count)
+                self.view_count = int(self.half_move_count)
                 self.move_list.append(move_played)
 
-                # TODO: game state stack is full of only the most recent position
-                # self.game_state_stack.append(list(self.piece_location))  # save game state
                 self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)

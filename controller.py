@@ -163,7 +163,7 @@ class Controller:
 
         # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
-            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.half_move_view_count - 1]:  # -1 for 0 indexing
+            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
                 print("correct")
                 player_move = self.view.move_entry.get(), self.study_board.half_move_count
                 print(player_move)
@@ -173,29 +173,29 @@ class Controller:
             else:
                 print("incorrect")
                 self.view.move_entry.delete('0', 'end')
-                self.study_board.half_move_view_count -= 1
+                self.study_board.view_count -= 1
                 self.study_board.half_move_count -= 1
                 # self.study_board.peruse_move(Direction.BACKWARD, self.study_board.half_move_view_count) # replaced game_stack with tuple list
 
         if button == 'backwards':  # decrease board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
-                if self.play_board.half_move_view_count - 1 >= 0:
-                    self.play_board.half_move_view_count -= 1
-                    self.play_board.peruse_move(Direction.BACKWARD, self.play_board.half_move_view_count)
+                if self.play_board.view_count - 1 >= 0:
+                    self.play_board.view_count -= 1
+                    self.play_board.peruse_move(Direction.BACKWARD, self.play_board.view_count)
                 else:
                     pass   # peruse_move(self, direction, index=int)
 
             elif self.app_mode == ChessMode.STUDY:
-                if self.study_board.half_move_view_count - 1 >= 0:
-                    self.study_board.half_move_view_count -= 1
-                    self.study_board.peruse_move(Direction.BACKWARD, self.study_board.half_move_view_count)
-                    print(self.study_board.half_move_view_count)
+                if self.study_board.view_count - 1 >= 0:
+                    self.study_board.view_count -= 1
+                    self.study_board.peruse_move(Direction.BACKWARD, self.study_board.view_count)
+                    print(self.study_board.view_count)
                 else:
                     pass
             elif self.app_mode == ChessMode.CREATE:
-                if self.editor_board.half_move_view_count - 1 >= 0:
-                    self.editor_board.half_move_view_count -= 1
-                    self.editor_board.peruse_move(Direction.BACKWARD, self.editor_board.half_move_view_count)
+                if self.editor_board.view_count - 1 >= 0:
+                    self.editor_board.view_count -= 1
+                    self.editor_board.peruse_move(Direction.BACKWARD, self.editor_board.view_count)
                 else:
                     pass
             elif self.app_mode == ChessMode.INACTIVE:
@@ -205,22 +205,22 @@ class Controller:
 
         if button == 'forwards':  # increase board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
-                if self.play_board.half_move_view_count + 1 <= len(self.play_board.game_state_stack):
-                    self.play_board.peruse_move(Direction.FORWARD, self.play_board.half_move_view_count)
-                    self.play_board.half_move_view_count += 1
+                if self.play_board.view_count + 1 <= len(self.play_board.game_state_stack):
+                    self.play_board.peruse_move(Direction.FORWARD, self.play_board.view_count)
+                    self.play_board.view_count += 1
                 else:
                     pass
 
             elif self.app_mode == ChessMode.STUDY:
-                if self.study_board.half_move_view_count + 1 <= len(self.study_board.game_state_stack):
-                    self.study_board.peruse_move(Direction.FORWARD, self.study_board.half_move_view_count)
-                    self.study_board.half_move_view_count += 1
+                if self.study_board.view_count + 1 <= len(self.study_board.game_state_stack):
+                    self.study_board.peruse_move(Direction.FORWARD, self.study_board.view_count)
+                    self.study_board.view_count += 1
                 else:
                     pass
             elif self.app_mode == ChessMode.CREATE:
-                if self.editor_board.half_move_view_count + 1 <= len(self.editor_board.game_state_stack):
-                    self.editor_board.peruse_move(Direction.FORWARD, self.editor_board.half_move_view_count)
-                    self.editor_board.half_move_view_count += 1
+                if self.editor_board.view_count + 1 <= len(self.editor_board.game_state_stack):
+                    self.editor_board.peruse_move(Direction.FORWARD, self.editor_board.view_count)
+                    self.editor_board.view_count += 1
                 else:
                     pass
             elif self.app_mode == ChessMode.INACTIVE:
@@ -257,7 +257,7 @@ class Controller:
         self.view.selector_opening_string_var.set(button)
 
     def game_board_click(self, board, button):
-        if board.half_move_view_count != board.half_move_count:
+        if board.view_count != board.half_move_count:
             pass
         else:
             if self.app_mode is ChessMode.INACTIVE:
