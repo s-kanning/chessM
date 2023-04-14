@@ -14,6 +14,7 @@ class Model:
         self.users_openings = []
         # self.current_move = 0
         self.active_moves_only = []
+        self.active_game_stack = []
 
     def login(self, username, password):
         check = db_connection.check_login_details(self, username, password)  # returns a list of tuples

@@ -111,7 +111,7 @@ class DbConnection:
     def query_db_openings(self, user_id):
         self.my_conn = sqlite3.connect('chess_database.db')
         self.my_c = self.my_conn.cursor()
-        self.my_c.execute("SELECT opening_name,move_list FROM openings WHERE user_id = (?)",
+        self.my_c.execute("SELECT opening_name,move_list,game_stack FROM openings WHERE user_id = (?)",
                           (user_id,)
                           )
         openings = self.my_c.fetchall()

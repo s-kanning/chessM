@@ -11,6 +11,7 @@ class ChessMode(Enum):
     CREATE = auto()
     INACTIVE = auto()
 
+
 class Direction(Enum):
     FORWARD = (0, 1)
     BACKWARD = (1, 0)
@@ -80,9 +81,11 @@ class Controller:
             for item in data:
                 if item[0] == opening:
                     active_opening_moves = item[1]
+                    self.model.active_game_stack = item[2]
             self.model.active_opening_moves = active_opening_moves
             print("model active opening name: " + self.model.active_opening_name)
             print("model active opening moves: " + self.model.active_opening_moves)
+            print("active game stack" + self.model.active_game_stack)
 
             self.model.active_moves_only = self.model.format_move_list(self.model.active_opening_moves)
             # self.model.current_move = 0
@@ -116,19 +119,14 @@ class Controller:
 
             data = self.model.get_user_openings(self.model.user_id)
 
-            active_opening_moves = ''
+            editor_opening_moves = ''
             for item in data:
                 if item[0] == opening:
-                    active_opening_moves = item[1]
-            self.model.active_opening_moves = active_opening_moves
+                    editor_opening_moves = item[1]
 
             #  set the move list in the text box
             self.view.editor_move_list_textbox.delete("0.0", "end")
-            self.view.editor_move_list_textbox.insert("0.0", active_opening_moves)
-            self.model.active_opening_name = opening
-
-            print("model active opening name: " + self.model.active_opening_name)
-            print("model active opening moves: " + self.model.active_opening_moves)
+            self.view.editor_move_list_textbox.insert("0.0", editor_opening_moves)
 
         if button == 'create':
             self.app_mode = ChessMode.CREATE
