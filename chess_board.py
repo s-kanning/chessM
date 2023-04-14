@@ -285,9 +285,11 @@ class ChessBoard:
     # def game_state_append(self, state):  # necessary?
     #     self.game_state_stack.append(state)
     #
-    # def game_state_pop(self, state):  # necessary?
-    #     self.game_state_stack.pop(state)
+    def game_state_pop(self, state):  # necessary?
+        self.game_state_stack.pop(state)
 
+    # TODO priority0 add stack for captured pieces, add bool to move function if capture
+    # add conditional for peruse move to pop captured piece
     def peruse_move(self, direction, index=int):  # TODO: also edit the related text box
         move_piece = self.game_state_stack[index]  # select tuple (from, to)
         self.buttons[move_piece[direction.value[1]]].configure(image=self.piece_location[move_piece[direction.value[0]]].image)
