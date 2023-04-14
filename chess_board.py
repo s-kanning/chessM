@@ -137,7 +137,7 @@ class ChessBoard:
                 self.view.btn.grid(column=x, row=y, padx=0, pady=0, sticky=N + S + E + W)
                 self.view.btn.configure(
                     command=lambda coordinate=btn_name: self.controller.game_board_click(self, coordinate)
-                    )
+                )
                 self.coord.append(btn_name)
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
@@ -147,8 +147,8 @@ class ChessBoard:
 
         if self.selected_piece is not None:  # if exists selected piece, place at square
 
-            if self.move_from_ind == ind:  # set selected piece to None
-                self.selected_piece = None
+            if self.move_from_ind == ind:  # set selected piece to None to deselect
+                self.selected_piece = None  # TODO do I need this? can I just use piece_location[move_from_ind] ?
                 print("deselected piece")
 
             else:  # play piece and append it to move_list
@@ -164,14 +164,16 @@ class ChessBoard:
                 self.piece_location[ind] = self.selected_piece
 
                 print("move played: " + move_played)
+                stack_item = (self.move_from_ind, ind)
                 self.selected_piece = None
                 self.move_from_ind = None
-                self.half_move_count += 1
+                self.half_move_count += 1  # TODO replace this with just using len(game_stack) - viable for play, not for study
                 self.half_move_view_count = int(self.half_move_count)
                 self.move_list.append(move_played)
 
                 # TODO: game state stack is full of only the most recent position
-                self.game_state_stack.append(list(self.piece_location))  # save game state
+                # self.game_state_stack.append(list(self.piece_location))  # save game state
+                self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)
 
@@ -280,7 +282,7 @@ class ChessBoard:
             else:
                 pass  # to skip the empty squares
 
-        self.game_state_stack.append(list(self.piece_location))
+        # self.game_state_stack.append(list(self.piece_location))
 
     # def game_state_append(self, state):  # necessary?
     #     self.game_state_stack.append(state)
@@ -288,15 +290,12 @@ class ChessBoard:
     # def game_state_pop(self, state):  # necessary?
     #     self.game_state_stack.pop(state)
 
-    def set_to_game_state(self, index=int):  # TODO: also edit the related text box
-        state = self.game_state_stack[index]
-        temp_state = state
-        # consider making statement if piece_location[i] == state[i] pass, move self.piece_location = state to after for statement
-        for i in range(0, 64):
-            if temp_state[i] is not None:
-                self.buttons[i].configure(image=temp_state[i].image)
-            else:
-                self.buttons[i].configure(image=self.empty_image)
+    def peruse_move(self, direction, index=int):  # TODO: also edit the related text box
+        move_piece = self.game_state_stack[index]  # select tuple (from, to)
+        self.buttons[move_piece[direction.value[1]]].configure(image=self.piece_location[move_piece[direction.value[0]]].image)
+        self.buttons[move_piece[direction.value[0]]].configure(image=self.empty_image)
+        self.piece_location[move_piece[direction.value[1]]] = self.piece_location[move_piece[direction.value[0]]]
+        self.piece_location[move_piece[direction.value[0]]] = None
 
 
 class King:
