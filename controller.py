@@ -82,10 +82,12 @@ class Controller:
                 if item[0] == opening:
                     active_opening_moves = item[1]
                     self.model.active_game_stack = item[2]
+                    self.model.active_capture_stack = item[3]
             self.model.active_opening_moves = active_opening_moves
             print("model active opening name: " + self.model.active_opening_name)
             print("model active opening moves: " + self.model.active_opening_moves)
             print("active game stack" + self.model.active_game_stack)
+            print("active capture stack" + self.model.active_capture_stack)
 
             self.model.active_moves_only = self.model.format_move_list(self.model.active_opening_moves)
             # self.model.current_move = 0
@@ -146,12 +148,13 @@ class Controller:
                 print("Updated entry: " + opening_name)
 
                 move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
-                self.model.edit_db_entry(opening_name, move_list, self.editor_board.game_state_stack)
+                self.model.edit_db_entry(opening_name, move_list, self.editor_board.game_state_stack, self.editor_board.capture_stack)
             else:
                 opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
                 move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
                 game_stack = str(self.editor_board.game_state_stack)
-                self.model.create_db_entry(self.model.user_id, opening_name, move_list, game_stack)
+                capture_stack = str(self.editor_board.capture_stack)
+                self.model.create_db_entry(self.model.user_id, opening_name, move_list, game_stack, capture_stack)
                 print("Created new entry: " + opening_name)
 
         if button == 'delete':  # button found on create/edit frame
@@ -164,16 +167,13 @@ class Controller:
             if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
                 print("correct")
                 player_move = self.view.move_entry.get(), self.study_board.half_move_count
-                print(player_move)
                 self.update_move_list_textbox(player_move)
-                # self.model.current_move += 2  # move to white's next move
                 self.view.move_entry.delete('0', 'end')
             else:
                 print("incorrect")
                 self.view.move_entry.delete('0', 'end')
-                self.study_board.view_count -= 1
-                self.study_board.half_move_count -= 1
-                # self.study_board.peruse_move(Direction.BACKWARD, self.study_board.half_move_view_count) # replaced game_stack with tuple list
+                # self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack)-1))  # replaced game_stack with tuple list
+                # self.study_board.game_state_pop(-1)
 
         if button == 'backwards':  # decrease board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
