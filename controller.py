@@ -196,6 +196,18 @@ class Controller:
                 if self.editor_board.view_count - 1 >= 0:
                     self.editor_board.view_count -= 1
                     self.editor_board.peruse_move(Direction.BACKWARD, self.editor_board.view_count)
+
+                    #adjust move_list, game_stack, capture_stack, text box
+                    self.editor_board.move_list.pop()
+                    self.editor_board.game_state_stack.pop()
+
+                    self.view.editor_move_list_textbox.delete("0.0", "end")
+                    for i in range(len(self.editor_board.move_list)):
+                        if (i + 1) % 2 != 0:
+                            move_count = (int((i + 1) / 2))
+                            self.view.editor_move_list_textbox.insert('end', str(move_count + 1) + ". ")
+                        self.view.editor_move_list_textbox.insert('end', self.editor_board.move_list[i] + ' ')
+
                 else:
                     pass
             elif self.app_mode == ChessMode.INACTIVE:

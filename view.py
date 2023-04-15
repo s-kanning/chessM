@@ -394,7 +394,7 @@ class View(customtkinter.CTk):
         self.editor_name_textbox.grid(row=0, column=3, pady=(20, 20), padx=0)
         self.editor_name_textbox.insert("0.0", "Opening Name")
 
-        self.editor_move_list_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200,
+        self.editor_move_list_textbox = customtkinter.CTkTextbox(self.editor_frame, height=400, width=200,
                                                                  corner_radius=20,
                                                                  text_color=Blue_green,
                                                                  font=(Font, 20)
@@ -413,8 +413,24 @@ class View(customtkinter.CTk):
                                                        font=(Font, 20), command=lambda
                 my_button="delete": self.controller.on_button_click(my_button)
                                                        )
-        editor_delete_button.grid(row=3, column=3, padx=0, pady=0, sticky='S')
-        # TODO add cancel button, add reset button, add ability to delete move
+        editor_delete_button.grid(row=3, column=3, padx=0, pady=(80, 0), sticky='EW')
+
+        backward_button = customtkinter.CTkButton(self.editor_frame, width=200, corner_radius=20, text="<<",
+                                                       font=(Font, 20), command=lambda
+                my_button="backwards": self.controller.on_button_click(my_button)  # deleted disabled
+                                                       )
+        backward_button.grid(row=3, column=3, padx=0, pady=(60, 0), sticky='n')
+
+
+
+        self.editor_reset_button = customtkinter.CTkButton(self.editor_frame, width=200, corner_radius=20,
+                                                    text="Reset",
+                                                    font=(Font, 20), command=lambda
+                my_button="reset": self.controller.on_button_click(my_button)
+                                                    )
+        self.editor_reset_button.grid(row=3, column=3, padx=0, pady=(0, 40), sticky='s')
+
+        # TODO add cancel button, add ability to delete move
 
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
