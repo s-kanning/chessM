@@ -168,7 +168,7 @@ class Controller:
         if button == 'submit':  # check user input against move list
             if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
                 print("correct")
-                player_move = self.view.move_entry.get(), self.study_board.half_move_count
+                player_move = self.view.move_entry.get(), len(self.study_board.move_list)
                 self.update_move_list_textbox(player_move)
                 self.view.move_entry.delete('0', 'end')
             else:
@@ -197,7 +197,7 @@ class Controller:
                     self.editor_board.view_count -= 1
                     self.editor_board.peruse_move(Direction.BACKWARD, self.editor_board.view_count)
 
-                    #adjust move_list, game_stack, capture_stack, text box
+                    # adjust move_list, game_stack, capture_stack, text box
                     self.editor_board.move_list.pop()
                     self.editor_board.game_state_stack.pop()
 
@@ -269,7 +269,7 @@ class Controller:
         self.view.selector_opening_string_var.set(button)
 
     def game_board_click(self, board, button):
-        if board.view_count != board.half_move_count:
+        if board.view_count != len(board.move_list):
             pass
         else:
             if self.app_mode is ChessMode.INACTIVE:

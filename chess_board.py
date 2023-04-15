@@ -40,10 +40,9 @@ class ChessBoard:
         self.starting_position = []
         self.selected_piece = None
         self.move_from_ind = None
-        self.half_move_count = 0
         self.view_count = 0
 
-        self.game_state_stack = []  # TODO: add this to database entry
+        self.game_state_stack = []
         self.capture_stack = []
 
     def create_everything(self):
@@ -56,7 +55,6 @@ class ChessBoard:
     def reset_board(self):
         if len(self.move_list) > 0:  # clear any existing pieces off board
             self.move_list.clear()
-            self.half_move_count = 0
             self.view_count = 0
             for i in range(0, 64):
                 self.piece_location[i] = None
@@ -172,13 +170,12 @@ class ChessBoard:
                 print("move played: " + move_played)
                 self.selected_piece = None
                 self.move_from_ind = None
-                self.half_move_count += 1  # TODO replace this with just using len(game_stack) - viable for play, not for study
-                self.view_count = int(self.half_move_count)
                 self.move_list.append(move_played)
+                self.view_count = len(self.move_list)
 
                 self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
 
-                return move_played, self.half_move_count  # return move information str(piece_notation + coord)
+                return move_played, len(self.move_list)  # return move information str(piece_notation + coord)
 
         elif self.piece_location[ind] is not None:  # if no selected piece, select piece
             self.selected_piece = self.piece_location[ind]
