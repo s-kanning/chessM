@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 
+
 # Thoughts for later, reduce login screen, save stuff to minimize work for user
 # Reduce size of buttons on the side, main thing to be clicked is board
 # make size scalable
@@ -147,9 +148,9 @@ class View(customtkinter.CTk):
                                                   fg_color=Blue_green, border_color=Light_green
                                                   )
         self.play_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
-                                                  bg_color=Blue_green,
-                                                  fg_color=Blue_green, border_color=Light_green
-                                                  )
+                                                 bg_color=Blue_green,
+                                                 fg_color=Blue_green, border_color=Light_green
+                                                 )
         self.play_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.study_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.database_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
@@ -393,7 +394,8 @@ class View(customtkinter.CTk):
         self.editor_name_textbox.grid(row=0, column=3, pady=(20, 20), padx=0)
         self.editor_name_textbox.insert("0.0", "Opening Name")
 
-        self.editor_move_list_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200, corner_radius=20,
+        self.editor_move_list_textbox = customtkinter.CTkTextbox(self.editor_frame, height=450, width=200,
+                                                                 corner_radius=20,
                                                                  text_color=Blue_green,
                                                                  font=(Font, 20)
                                                                  )
@@ -412,6 +414,7 @@ class View(customtkinter.CTk):
                 my_button="delete": self.controller.on_button_click(my_button)
                                                        )
         editor_delete_button.grid(row=3, column=3, padx=0, pady=0, sticky='S')
+        # TODO add cancel button, add reset button, add ability to delete move
 
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
@@ -543,17 +546,11 @@ class View(customtkinter.CTk):
         self.play_move_list_textbox.insert("0.0", "Move list: ")
         self.play_move_list_textbox.configure(state="disabled")
 
-
     def update_create_move_list(self, new_move, half_move):
-        self.editor_move_list_textbox.configure(state="normal")
-
         if half_move % 2 != 0:
             move_count = (int((half_move + 1) / 2))
             self.editor_move_list_textbox.insert('end', str(move_count) + ". ")
-
         self.editor_move_list_textbox.insert('end', new_move + ' ')
-
-        self.editor_move_list_textbox.configure(state="disabled")
 
     def clear_create_move_list(self):
         self.editor_move_list_textbox.configure(state="normal")
