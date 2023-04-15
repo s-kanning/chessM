@@ -148,7 +148,9 @@ class Controller:
                 print("Updated entry: " + opening_name)
 
                 move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
-                self.model.edit_db_entry(opening_name, move_list, self.editor_board.game_state_stack, self.editor_board.capture_stack)
+                game_stack = str(self.editor_board.game_state_stack)
+                capture_stack = str(self.editor_board.capture_stack)
+                self.model.edit_db_entry(opening_name, move_list, game_stack, capture_stack)
             else:
                 opening_name = self.view.editor_name_textbox.get("1.0", 'end-1c')
                 move_list = self.view.editor_move_list_textbox.get("1.0", 'end-1c')
