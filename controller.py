@@ -166,16 +166,24 @@ class Controller:
 
         # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
-            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
-                print("correct")
-                player_move = self.view.move_entry.get(), len(self.study_board.move_list)
-                self.update_move_list_textbox(player_move)
-                self.view.move_entry.delete('0', 'end')
+            if self.view.move_entry.get() != '':
+                if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
+                    print("correct")
+                    player_move = self.view.move_entry.get(), len(self.study_board.move_list)
+                    self.update_move_list_textbox(player_move)
+                    self.view.move_entry.delete('0', 'end')
+                    # if len(move_list) < len(active_game_stack): correct_message, else: finished_message
+
+                else:
+                    print("incorrect")
+                    self.view.move_entry.delete('0', 'end')
+                    self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack)-1)) # -1 for 0 indexing
+                    self.study_board.view_count -= 1
+                    self.study_board.game_state_stack.pop()
+                    self.study_board.move_list.pop()
             else:
-                print("incorrect")
-                self.view.move_entry.delete('0', 'end')
-                # self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack)-1))  # replaced game_stack with tuple list
-                # self.study_board.game_state_pop(-1)
+                print("no suggested move")
+                pass
 
         if button == 'backwards':  # decrease board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
