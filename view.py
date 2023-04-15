@@ -430,8 +430,6 @@ class View(customtkinter.CTk):
                                                     )
         self.editor_reset_button.grid(row=3, column=3, padx=0, pady=(0, 40), sticky='s')
 
-        # TODO add cancel button, add ability to delete move
-
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
                                               border_width=0,
