@@ -51,15 +51,15 @@ class Model:
         query = db_connection.query_db_openings(self, id_number)
         return query
 
-    def create_db_entry(self, user_number, name_of_opening, list_of_moves, game_stack):
+    def create_db_entry(self, user_number, name_of_opening, list_of_moves, game_stack, capture_stack):
         print("called: create_db_entry")
         new_entry = [user_number, name_of_opening,
-                     list_of_moves, game_stack]  # entry = [user_number, name_of_opening, list_of_moves, game_stack]
+                     list_of_moves, game_stack, capture_stack]  # entry = [user_number, name_of_opening, list_of_moves, game_stack, capture_stack]
         db_connection.create_new_entry(self, new_entry)
 
-    def edit_db_entry(self, opening_name, list_of_moves, game_stack):
+    def edit_db_entry(self, opening_name, list_of_moves, game_stack, capture_stack):
         print("called: edit_db_entry")
-        db_connection.edit_db_entry(self, opening_name, list_of_moves, game_stack)
+        db_connection.edit_db_entry(self, opening_name, list_of_moves, game_stack, capture_stack)
 
     def delete_db_entry(self, opening_name):
         print("called: delete_db_entry")
@@ -74,7 +74,7 @@ class Model:
 
     def format_move_list(self, move_string):
         temp_list = move_string.split()
-        n = 3 # used to remove every 3rd item of the list, the numbers of the move list
+        n = 3  # used to remove every 3rd item of the list, the numbers of the move list
         del temp_list[::n]  # remove the move numbers
         move_only_list = temp_list
 
