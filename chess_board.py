@@ -44,6 +44,7 @@ class ChessBoard:
         self.view_count = 0
 
         self.game_state_stack = []  # TODO: add this to database entry
+        self.capture_stack = []
 
     def create_everything(self):
 
@@ -148,7 +149,7 @@ class ChessBoard:
         if self.selected_piece is not None:  # if exists selected piece, place at square
 
             if self.move_from_ind == ind:  # set selected piece to None to deselect
-                self.selected_piece = None  # TODO do I need this? can I just use piece_location[move_from_ind] ?
+                self.selected_piece = None  # do I need this? can I just use piece_location[move_from_ind] ?
                 print("deselected piece")
 
             else:  # play piece and append it to move_list
@@ -159,12 +160,16 @@ class ChessBoard:
 
                 if self.piece_location[ind] is not None:
                     move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+                    self.capture_stack.append(self.piece_location[ind])
+                    stack_item = (self.move_from_ind, ind, True)
+
                 else:
                     move_played = str(self.selected_piece.piece_notation) + str(coordinate)
-                self.piece_location[ind] = self.selected_piece
+                    stack_item = (self.move_from_ind, ind, False)
+
+                self.piece_location[ind] = self.selected_piece  # will this cause problems?
 
                 print("move played: " + move_played)
-                stack_item = (self.move_from_ind, ind)
                 self.selected_piece = None
                 self.move_from_ind = None
                 self.half_move_count += 1  # TODO replace this with just using len(game_stack) - viable for play, not for study
@@ -175,8 +180,8 @@ class ChessBoard:
 
                 return move_played, self.half_move_count  # return move information str(piece_notation + coord)
 
-        elif self.piece_location[ind] is not None:
-            self.selected_piece = self.piece_location[ind]  # if no selected piece, select piece
+        elif self.piece_location[ind] is not None:  # if no selected piece, select piece
+            self.selected_piece = self.piece_location[ind]
             self.move_from_ind = ind
 
         else:  # if no piece in square, pass
@@ -288,14 +293,24 @@ class ChessBoard:
     def game_state_pop(self, state):  # necessary?
         self.game_state_stack.pop(state)
 
-    # TODO priority0 add stack for captured pieces, add bool to move function if capture
     # add conditional for peruse move to pop captured piece
     def peruse_move(self, direction, index=int):  # TODO: also edit the related text box
-        move_piece = self.game_state_stack[index]  # select tuple (from, to)
-        self.buttons[move_piece[direction.value[1]]].configure(image=self.piece_location[move_piece[direction.value[0]]].image)
-        self.buttons[move_piece[direction.value[0]]].configure(image=self.empty_image)
-        self.piece_location[move_piece[direction.value[1]]] = self.piece_location[move_piece[direction.value[0]]]
-        self.piece_location[move_piece[direction.value[0]]] = None
+        recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool)
+        from_square_image = self.empty_image
+        from_square_piece = None
+        if recorded_move[2]:  # capture=True
+            if direction.value[0] == 0:  # if forward and capture=True, push piece onto stack
+                self.capture_stack.append(self.piece_location[recorded_move[direction.value[1]]])
+            else:  # if backward and capture=True, pop item off stack and place on board
+                from_square_piece = self.capture_stack.pop()
+                from_square_image = from_square_piece.image
+        else:  # if capture=False, proceed
+            pass
+
+        self.buttons[recorded_move[direction.value[1]]].configure(image=self.piece_location[recorded_move[direction.value[0]]].image)
+        self.piece_location[recorded_move[direction.value[1]]] = self.piece_location[recorded_move[direction.value[0]]]
+        self.buttons[recorded_move[direction.value[0]]].configure(image=from_square_image)
+        self.piece_location[recorded_move[direction.value[0]]] = from_square_piece
 
 
 class King:
