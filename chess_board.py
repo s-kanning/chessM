@@ -157,7 +157,11 @@ class ChessBoard:
                 self.piece_location[self.move_from_ind] = None
 
                 if self.piece_location[ind] is not None:
-                    move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+                    if self.selected_piece.piece_notation == '':
+                        column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                        move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
+                    else:
+                        move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
                     self.capture_stack.append(self.piece_location[ind])
                     stack_item = (self.move_from_ind, ind, True)
 
