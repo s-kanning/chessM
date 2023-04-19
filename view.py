@@ -561,7 +561,6 @@ class View(customtkinter.CTk):
         self.editor_move_list_textbox.configure(state="normal")
         self.editor_move_list_textbox.delete("0.0", "end")
         self.editor_move_list_textbox.insert("0.0", "Move list: ")
-        self.editor_move_list_textbox.configure(state="disabled")
 
     # TODO visual queue - create message pop-up: correct/incorrect - destroy self after 1 sec
     def message_correct(self):

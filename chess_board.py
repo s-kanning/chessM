@@ -286,7 +286,7 @@ class ChessBoard:
         self.game_state_stack.pop(state)
 
     # add conditional for peruse move to pop captured piece
-    def peruse_move(self, direction, index=int):  # TODO: also edit the related text box
+    def peruse_move(self, direction, index=int):
         recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool)
         from_square_image = self.empty_image
         from_square_piece = None

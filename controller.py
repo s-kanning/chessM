@@ -70,6 +70,7 @@ class Controller:
         if button == 'study':
             self.app_mode = ChessMode.STUDY
             self.view.show_main_container_frame(self.view.study_frame)
+            self.reset_board_and_textbox()
 
             opening = self.view.selector_opening_string_var.get()
             self.view.study_opening_name.set(opening)
@@ -81,13 +82,9 @@ class Controller:
             for item in data:
                 if item[0] == opening:
                     active_opening_moves = item[1]
-                    self.model.active_game_stack = item[2]
+                    self.model.active_game_stack = eval(item[2])
                     self.model.active_capture_stack = item[3]
             self.model.active_opening_moves = active_opening_moves
-            print("model active opening name: " + self.model.active_opening_name)
-            print("model active opening moves: " + self.model.active_opening_moves)
-            print("active game stack" + self.model.active_game_stack)
-            print("active capture stack" + self.model.active_capture_stack)
 
             self.model.active_moves_only = self.model.format_move_list(self.model.active_opening_moves)
             # self.model.current_move = 0
@@ -308,22 +305,31 @@ class Controller:
     # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
     def submit_move(self):  # add some test cases to prevent breaking program
         if self.view.move_entry.get() != '':
-            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
-                self.view.message_correct()
-                player_move = self.view.move_entry.get(), len(self.study_board.move_list)
-                self.update_move_list_textbox(player_move)
-                self.view.move_entry.delete('0', 'end')
-                if len(self.study_board.move_list) == len(self.model.active_moves_only):
-                    self.view.message_finish()
+            if len(self.model.active_moves_only) >= self.study_board.view_count:
+                if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
+                    self.view.message_correct()
+                    player_move = self.view.move_entry.get(), len(self.study_board.move_list)
+                    self.update_move_list_textbox(player_move)
+                    self.view.move_entry.delete('0', 'end')
+                    if len(self.study_board.move_list) < len(self.model.active_moves_only):
+                        move_to_play = self.model.active_game_stack[self.study_board.view_count]
+                        self.study_board.play_move(self.study_board.coord[move_to_play[0]])
+                        self.study_board.play_move(self.study_board.coord[move_to_play[1]])
+                        if len(self.study_board.move_list) == len(self.model.active_moves_only):
+                            self.view.message_finish()
+                    else:
+                        self.view.message_finish()
 
+                else:
+                    self.view.message_incorrect()
+                    self.view.move_entry.delete('0', 'end')
+                    self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack) - 1)
+                                                 )  # -1 for 0 indexing
+                    self.study_board.view_count -= 1
+                    self.study_board.game_state_stack.pop()
+                    self.study_board.move_list.pop()
             else:
-                self.view.message_incorrect()
-                self.view.move_entry.delete('0', 'end')
-                self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack) - 1)
-                                             )  # -1 for 0 indexing
-                self.study_board.view_count -= 1
-                self.study_board.game_state_stack.pop()
-                self.study_board.move_list.pop()
+                pass
         else:
             print("no suggested move")
             pass
