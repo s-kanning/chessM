@@ -4,15 +4,6 @@ from PIL import Image
 import configurations
 
 
-# TODO: connect textbox and chess board -> priority1
-#       when a move is made on the board, write it in the next box. disable textbox
-#       make a list the records move lists
-#       append moves to the list -> click
-#       create a function to pop() a move off the list -> use case?
-
-# TODO: add functionality of view buttons to cycle through move list -> priority2
-#        separate list of moves necessary?
-
 # TODO: create rules for piece movement
 
 # TODO: create ability to castle O-O, O-O-O
