@@ -25,7 +25,7 @@ class Controller:
 
         self.play_board = ChessBoard(view=self.view, controller=self, frame=self.view.play_board_frame)
         self.play_board.create_everything()
-        self.study_board = ChessBoard(view=self.view, controller=self, frame=self.view.board_frame)
+        self.study_board = ChessBoard(view=self.view, controller=self, frame=self.view.study_board_frame)
         self.study_board.create_everything()
         self.selector_board = ChessBoard(view=self.view, controller=self, frame=self.view.selecting_frame)
         self.selector_board.create_everything()
@@ -164,7 +164,6 @@ class Controller:
             opening_name = self.view.editor_name_textbox.get("0.0", "end")
             self.model.delete_db_entry(opening_name)
 
-        # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
         if button == 'submit':  # check user input against move list
             self.submit_move()
 
@@ -308,18 +307,22 @@ class Controller:
         elif self.app_mode == ChessMode.INACTIVE:
             pass
 
+    # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
     def submit_move(self):  # add some test cases to prevent breaking program
         if self.view.move_entry.get() != '':
-            if self.view.move_entry.get() == self.model.active_moves_only[
-                self.study_board.view_count - 1]:  # -1 for 0 indexing
+            if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
+                # self.view.message_correct()
                 print("correct")
+                # self.view.message_correct_destroy()
                 player_move = self.view.move_entry.get(), len(self.study_board.move_list)
                 self.update_move_list_textbox(player_move)
                 self.view.move_entry.delete('0', 'end')
                 # if len(move_list) < len(active_game_stack): correct_message, else: finished_message
 
             else:
+                # self.view.message_incorrect()
                 print("incorrect")
+                # self.view.message_incorrect_destroy()
                 self.view.move_entry.delete('0', 'end')
                 self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack) - 1)
                                              )  # -1 for 0 indexing

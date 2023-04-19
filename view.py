@@ -211,8 +211,8 @@ class View(customtkinter.CTk):
                                                             )
         self.submit_answer_button.grid(row=4, column=3, padx=0, pady=(80, 0), sticky='ew')
 
-        self.board_frame = customtkinter.CTkFrame(self.study_frame, height=640, width=640, corner_radius=0)
-        self.board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
+        self.study_board_frame = customtkinter.CTkFrame(self.study_frame, height=640, width=640, corner_radius=0)
+        self.study_board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
 
         self.reset_button = customtkinter.CTkButton(self.study_frame, width=200, corner_radius=20,
                                                     text="Reset",
@@ -416,18 +416,16 @@ class View(customtkinter.CTk):
         editor_delete_button.grid(row=3, column=3, padx=0, pady=(80, 0), sticky='EW')
 
         backward_button = customtkinter.CTkButton(self.editor_frame, width=200, corner_radius=20, text="<<",
-                                                       font=(Font, 20), command=lambda
+                                                  font=(Font, 20), command=lambda
                 my_button="backwards": self.controller.on_button_click(my_button)  # deleted disabled
-                                                       )
+                                                  )
         backward_button.grid(row=3, column=3, padx=0, pady=(60, 0), sticky='n')
 
-
-
         self.editor_reset_button = customtkinter.CTkButton(self.editor_frame, width=200, corner_radius=20,
-                                                    text="Reset",
-                                                    font=(Font, 20), command=lambda
+                                                           text="Reset",
+                                                           font=(Font, 20), command=lambda
                 my_button="reset": self.controller.on_button_click(my_button)
-                                                    )
+                                                           )
         self.editor_reset_button.grid(row=3, column=3, padx=0, pady=(0, 40), sticky='s')
 
     def _make_button_panel(self, frame):
@@ -574,11 +572,33 @@ class View(customtkinter.CTk):
 
     # TODO visual queue - create message pop-up: correct/incorrect - destroy self after 1 sec
     # def message_correct(self):
-    #   self.message_label = ctk.frame(text = "correct!", bg_color='green', text_color="white")
-    #   wait
-    #   self.message_label.destroy()
-
+    #     self.correct_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='green')
+    #     self.correct_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
+    #
+    #     self.correct_message_label = customtkinter.CTkLabel(self.correct_frame, text="Correct!", bg_color='green',
+    #                                                      text_color="white", font=(Font, 80)
+    #                                                      )
+    #     self.correct_message_label.grid(row=0, column=0)
+    #
+    #
+    #
+    # def message_correct_destroy(self):
+    #     self.after(1000)
+    #     self.correct_frame.destroy()
+    #     self.correct_message_label.destroy()
+    #
     # def message_incorrect(self):
-    #   self.message_label = ctk.frame(text = "incorrect" bg_color='red', text_color="white")
-    #   wait
-    #   self.message_label.destroy()
+    #     self.incorrect_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='red')
+    #     self.incorrect_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
+    #
+    #     self.incorrect_message_label = customtkinter.CTkLabel(self.incorrect_frame, text="Try again.", bg_color='red',
+    #                                                      text_color="white", font=(Font, 80)
+    #                                                      )
+    #     self.incorrect_message_label.grid(row=0, column=0)
+    #
+    #
+    # def message_incorrect_destroy(self):
+    #     self.after(1000)
+    #     self.incorrect_frame.destroy()
+    #     self.incorrect_message_label.destroy()
+
