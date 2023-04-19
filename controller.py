@@ -313,7 +313,8 @@ class Controller:
                 player_move = self.view.move_entry.get(), len(self.study_board.move_list)
                 self.update_move_list_textbox(player_move)
                 self.view.move_entry.delete('0', 'end')
-                # if len(move_list) < len(active_game_stack): correct_message, else: finished_message
+                if len(self.study_board.move_list) == len(self.model.active_moves_only):
+                    self.view.message_finish()
 
             else:
                 self.view.message_incorrect()

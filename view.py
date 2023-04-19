@@ -569,21 +569,30 @@ class View(customtkinter.CTk):
         self.correct_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
 
         self.correct_message_label = customtkinter.CTkLabel(self.correct_frame, text="Correct!", bg_color='green',
-                                                         text_color="white", font=(Font, 80)
-                                                         )
+                                                            text_color="white", font=(Font, 80)
+                                                            )
         self.correct_message_label.grid(row=0, column=0)
         self.correct_frame.update()
         self.correct_frame.after(800, self.correct_frame.destroy())
 
-
     def message_incorrect(self):
-        self.incorrect_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='red')
-        self.incorrect_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
+        incorrect_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='red')
+        incorrect_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
 
-        self.incorrect_message_label = customtkinter.CTkLabel(self.incorrect_frame, text="Try again.", bg_color='red',
-                                                         text_color="white", font=(Font, 80)
-                                                         )
-        self.incorrect_message_label.grid(row=0, column=0)
-        self.incorrect_frame.update()
-        self.incorrect_frame.after(800, self.incorrect_frame.destroy())
+        incorrect_message_label = customtkinter.CTkLabel(incorrect_frame, text="Try again.", bg_color='red',
+                                                              text_color="white", font=(Font, 80)
+                                                              )
+        incorrect_message_label.grid(row=0, column=0)
+        incorrect_frame.update()
+        incorrect_frame.after(800, incorrect_frame.destroy())
 
+    def message_finish(self):
+        finish_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='red')
+        finish_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
+
+        finish_message_label = customtkinter.CTkLabel(finish_frame, text="Finished!", bg_color='green',
+                                                              text_color="white", font=(Font, 80)
+                                                              )
+        finish_message_label.grid(row=0, column=0)
+        finish_frame.update()
+        finish_frame.after(1500, finish_frame.destroy())
