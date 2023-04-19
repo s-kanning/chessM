@@ -204,13 +204,6 @@ class View(customtkinter.CTk):
                                                  )
         self.move_entry.grid(row=4, column=3, padx=0, pady=(0, 0), sticky='ew')
 
-        self.submit_answer_button = customtkinter.CTkButton(self.study_frame, width=200, corner_radius=20,
-                                                            text="Submit",
-                                                            font=(Font, 20), command=lambda
-                my_button="submit": self.controller.on_button_click(my_button)
-                                                            )
-        self.submit_answer_button.grid(row=4, column=3, padx=0, pady=(80, 0), sticky='ew')
-
         self.study_board_frame = customtkinter.CTkFrame(self.study_frame, height=640, width=640, corner_radius=0)
         self.study_board_frame.grid(row=1, rowspan=4, columnspan=2, padx=40, pady=(0, 40), sticky="EW")
 
