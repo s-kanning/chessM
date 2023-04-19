@@ -164,9 +164,6 @@ class Controller:
             opening_name = self.view.editor_name_textbox.get("0.0", "end")
             self.model.delete_db_entry(opening_name)
 
-        if button == 'submit':  # check user input against move list
-            self.submit_move()
-
         if button == 'backwards':  # decrease board.move_view_count, update chessboard
             if self.app_mode == ChessMode.PLAY:
                 if self.play_board.view_count - 1 >= 0:
@@ -273,6 +270,7 @@ class Controller:
                     elif self.app_mode == ChessMode.STUDY:
                         self.view.move_entry.delete('0', 'end')
                         self.view.move_entry.insert('0', str(player_move[0]))
+                        self.submit_move()
                     elif self.app_mode == ChessMode.CREATE:
                         self.update_move_list_textbox(player_move)
                         pass
