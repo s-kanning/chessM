@@ -307,14 +307,15 @@ class Controller:
         if self.view.move_entry.get() != '':
             if len(self.model.active_moves_only) >= self.study_board.view_count:
                 if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
-                    self.view.message_correct()
                     player_move = self.view.move_entry.get(), len(self.study_board.move_list)
                     self.update_move_list_textbox(player_move)
+                    self.view.message_correct()
                     self.view.move_entry.delete('0', 'end')
-                    if len(self.study_board.move_list) < len(self.model.active_moves_only):
+                    if len(self.study_board.move_list) < len(self.model.active_moves_only):  # TODO update textbox with black's moves
                         move_to_play = self.model.active_game_stack[self.study_board.view_count]
                         self.study_board.play_move(self.study_board.coord[move_to_play[0]])
-                        self.study_board.play_move(self.study_board.coord[move_to_play[1]])
+                        move_notation = self.study_board.play_move(self.study_board.coord[move_to_play[1]])
+                        self.view.update_study_move_list(move_notation[0], move_notation[1])
                         if len(self.study_board.move_list) == len(self.model.active_moves_only):
                             self.view.message_finish()
                     else:
