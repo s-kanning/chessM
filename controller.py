@@ -236,13 +236,15 @@ class Controller:
             self.model.admin_delete_db_entry(table, oid)
 
         if button == 'query_database_entry':
-            table = self.view.table_selector.get()
+            table = self.view.table_selector.get()  # TODO add a test to only accept real table names
+            if table == "openings" or table == "users":
+                info = self.model.admin_query_full_database(table)
+                self.view.database_textbox.delete("0.0", "end")
 
-            info = self.model.admin_query_full_database(table)
-            self.view.database_textbox.delete("0.0", "end")
-
-            for item in info:
-                self.view.database_textbox.insert("end", str(item) + "\n")
+                for item in info:
+                    self.view.database_textbox.insert("end", str(item[0]) + ': ' + str(item[1]) + ': ' + str(item[2]) + ', oid = ' + str(item[-1]) + "\n")
+            else:
+                pass
 
         # if button == 'game_board':
         #     print("game_board: click")
