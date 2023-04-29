@@ -336,7 +336,7 @@ class King:
     def legal_move(self, x_and_y):
         x = x_and_y[0]
         y = x_and_y[1]
-        if abs(x) <= 1 and abs(y) <= 1:
+        if (abs(x) <= 1 and abs(y) <= 1) or (abs(x) == 2 and y == 0):
             return True
         else:
             return False
@@ -430,13 +430,25 @@ class Pawn:
         self.value = 1
         self.piece_notation = ''
 
-    def legal_move(self, x_and_y):
+    def legal_move(self, x_and_y):  # TODO still need to add en passant, and restrict movement
         x = x_and_y[0]
         y = x_and_y[1]
-        if abs(x) <= 1 and abs(y) <= 1:
-            return True
-        else:
-            return False
+        if self.color == 'w':
+            if -2 <= y < 0 == x:
+                return True
+            elif abs(x) == 1 and y == -1:
+                return True
+            else:
+                return False
+
+        if self.color == 'b':
+            if 2 >= y > 0 and x == 0:
+                return True
+            elif abs(x) == 1 and y == 1:
+                return True
+            else:
+                return False
+
 
 if __name__ == '__main__':
     my_controller = ''
