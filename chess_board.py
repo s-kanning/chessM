@@ -140,30 +140,32 @@ class ChessBoard:
             if self.move_from_ind == ind:  # set selected piece to None to deselect
                 self.selected_piece = None
 
-            # TODO: check if move is legal, if yes: play piece and append it to move_list, else: pass
             else:  # convert (self.move_from_ind, ind) to x, y
                 x_and_y = self.convert_coord(self.move_from_ind, ind)
-
                 if self.selected_piece.legal_move(x_and_y):
-                    self.buttons[ind].configure(image=self.selected_piece.image)
-                    self.buttons[ind].configure(text='')
-                    self.buttons[self.move_from_ind].configure(image=self.empty_image)
-                    self.piece_location[self.move_from_ind] = None
 
                     if self.piece_location[ind] is not None:  # there is a piece here, check if color is same
-                        # TODO: add condition to check if piece is same color
-                        if self.selected_piece.piece_notation == '':  # notation for captures by pawns
-                            column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-                            move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
-                        else:  # notation for captures by pieces
-                            move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+                        if self.piece_location[ind].color == self.selected_piece.color:
+                            self.selected_piece = None
+                            return
+                        else:
+                            if self.selected_piece.piece_notation == '':  # notation for captures by pawns
+                                column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                                move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
+                            else:  # notation for captures by pieces
+                                move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
 
-                        self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
-                        stack_item = (self.move_from_ind, ind, True)
+                            self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
+                            stack_item = (self.move_from_ind, ind, True)
 
                     else:
                         move_played = str(self.selected_piece.piece_notation) + str(coordinate)
                         stack_item = (self.move_from_ind, ind, False)
+
+                    self.buttons[ind].configure(image=self.selected_piece.image)
+                    self.buttons[ind].configure(text='')
+                    self.buttons[self.move_from_ind].configure(image=self.empty_image)
+                    self.piece_location[self.move_from_ind] = None
 
                     self.piece_location[ind] = self.selected_piece
 
