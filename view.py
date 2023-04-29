@@ -559,7 +559,6 @@ class View(customtkinter.CTk):
         self.editor_move_list_textbox.delete("0.0", "end")
         self.editor_move_list_textbox.insert("0.0", "Move list: ")
 
-    # TODO visual queue - create message pop-up: correct/incorrect - destroy self after 1 sec
     def message_correct(self):
         self.correct_frame = customtkinter.CTkFrame(self.study_board_frame, bg_color='green')
         self.correct_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
@@ -576,8 +575,8 @@ class View(customtkinter.CTk):
         incorrect_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
 
         incorrect_message_label = customtkinter.CTkLabel(incorrect_frame, text="Try again.", bg_color='red',
-                                                              text_color="white", font=(Font, 80)
-                                                              )
+                                                         text_color="white", font=(Font, 80)
+                                                         )
         incorrect_message_label.grid(row=0, column=0)
         incorrect_frame.update()
         incorrect_frame.after(800, incorrect_frame.destroy())
@@ -587,8 +586,8 @@ class View(customtkinter.CTk):
         finish_frame.grid(row=3, column=1, rowspan=2, columnspan=6)
 
         finish_message_label = customtkinter.CTkLabel(finish_frame, text="Finished!", bg_color='green',
-                                                              text_color="white", font=(Font, 80)
-                                                              )
+                                                      text_color="white", font=(Font, 80)
+                                                      )
         finish_message_label.grid(row=0, column=0)
         finish_frame.update()
         finish_frame.after(1500, finish_frame.destroy())
