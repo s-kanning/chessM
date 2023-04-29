@@ -236,7 +236,7 @@ class Controller:
             self.model.admin_delete_db_entry(table, oid)
 
         if button == 'query_database_entry':
-            table = self.view.table_selector.get()  # TODO add a test to only accept real table names
+            table = self.view.table_selector.get()
             if table == "openings" or table == "users":
                 info = self.model.admin_query_full_database(table)
                 self.view.database_textbox.delete("0.0", "end")
