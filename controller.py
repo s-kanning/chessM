@@ -242,7 +242,8 @@ class Controller:
                 self.view.database_textbox.delete("0.0", "end")
 
                 for item in info:
-                    self.view.database_textbox.insert("end", str(item[0]) + ': ' + str(item[1]) + ': ' + str(item[2]) + ', oid = ' + str(item[-1]) + "\n")
+                    self.view.database_textbox.insert("end", str(item[0]) + ': ' + str(item[1]) + ': ' +
+                                                      str(item[2]) + ', oid = ' + str(item[-1]) + "\n")
             else:
                 pass
 
@@ -304,7 +305,6 @@ class Controller:
         elif self.app_mode == ChessMode.INACTIVE:
             pass
 
-    # TODO: call function for correct/incorrect answers, update board to play next move -> priority1
     def submit_move(self):  # add some test cases to prevent breaking program
         if self.view.move_entry.get() != '':
             if len(self.model.active_moves_only) >= self.study_board.view_count:
@@ -313,7 +313,7 @@ class Controller:
                     self.update_move_list_textbox(player_move)
                     self.view.message_correct()
                     self.view.move_entry.delete('0', 'end')
-                    if len(self.study_board.move_list) < len(self.model.active_moves_only):  # TODO update textbox with black's moves
+                    if len(self.study_board.move_list) < len(self.model.active_moves_only):
                         move_to_play = self.model.active_game_stack[self.study_board.view_count]
                         self.study_board.play_move(self.study_board.coord[move_to_play[0]])
                         move_notation = self.study_board.play_move(self.study_board.coord[move_to_play[1]])
