@@ -1,9 +1,7 @@
 # takes care of the visuals
 import tkinter
-from tkinter import *
 import customtkinter
 from configurations import *
-from PIL import ImageTk, Image
 
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -32,7 +30,6 @@ class View(customtkinter.CTk):
         self._make_container_frame()
 
     def main(self):
-        print("in main of view")
         self.mainloop()
 
     def _make_container_frame(self):
