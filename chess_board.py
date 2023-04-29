@@ -4,11 +4,11 @@ from PIL import Image
 import configurations
 
 
-# TODO: create rules for piece movement
-
 # TODO: create ability to castle O-O, O-O-O
 
 # TODO: create ability to play 'en passant'
+
+# TODO: last move square color to highlight - check highlight?
 
 
 class ChessBoard:
@@ -135,42 +135,51 @@ class ChessBoard:
     def play_move(self, coordinate):
         ind = self.coord.index(coordinate)
 
-        if self.selected_piece is not None:  # if exists selected piece, place at square
+        if self.selected_piece is not None:  # if exists selected piece, attempt to place at square
 
             if self.move_from_ind == ind:  # set selected piece to None to deselect
-                self.selected_piece = None  # do I need this? can I just use piece_location[move_from_ind] ?
-                print("deselected piece")
-
-            else:  # play piece and append it to move_list
-                self.buttons[ind].configure(image=self.selected_piece.image)
-                self.buttons[ind].configure(text='')
-                self.buttons[self.move_from_ind].configure(image=self.empty_image)
-                self.piece_location[self.move_from_ind] = None
-
-                if self.piece_location[ind] is not None:
-                    if self.selected_piece.piece_notation == '':
-                        column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-                        move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
-                    else:
-                        move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
-                    self.capture_stack.append(self.piece_location[ind])
-                    stack_item = (self.move_from_ind, ind, True)
-
-                else:
-                    move_played = str(self.selected_piece.piece_notation) + str(coordinate)
-                    stack_item = (self.move_from_ind, ind, False)
-
-                self.piece_location[ind] = self.selected_piece  # will this cause problems?
-
-                print("move played: " + move_played)
                 self.selected_piece = None
-                self.move_from_ind = None
-                self.move_list.append(move_played)
-                self.view_count = len(self.move_list)
 
-                self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
+            # TODO: check if move is legal, if yes: play piece and append it to move_list, else: pass
+            else:  # convert (self.move_from_ind, ind) to x, y
+                x_and_y = self.convert_coord(self.move_from_ind, ind)
 
-                return move_played, len(self.move_list)  # return move information str(piece_notation + coord)
+                if self.selected_piece.legal_move(x_and_y):
+                    self.buttons[ind].configure(image=self.selected_piece.image)
+                    self.buttons[ind].configure(text='')
+                    self.buttons[self.move_from_ind].configure(image=self.empty_image)
+                    self.piece_location[self.move_from_ind] = None
+
+                    if self.piece_location[ind] is not None:  # there is a piece here, check if color is same
+                        # TODO: add condition to check if piece is same color
+                        if self.selected_piece.piece_notation == '':  # notation for captures by pawns
+                            column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                            move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
+                        else:  # notation for captures by pieces
+                            move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+
+                        self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
+                        stack_item = (self.move_from_ind, ind, True)
+
+                    else:
+                        move_played = str(self.selected_piece.piece_notation) + str(coordinate)
+                        stack_item = (self.move_from_ind, ind, False)
+
+                    self.piece_location[ind] = self.selected_piece
+
+                    print("move played: " + move_played)
+                    self.selected_piece = None
+                    self.move_from_ind = None
+                    self.move_list.append(move_played)
+                    self.view_count = len(self.move_list)
+
+                    self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
+
+                    return move_played, len(self.move_list)  # return move information str(piece_notation + coord)
+
+                else:  # if attempt illegal move, deselect piece
+                    self.selected_piece = None
+                    pass
 
         elif self.piece_location[ind] is not None:  # if no selected piece, select piece
             self.selected_piece = self.piece_location[ind]
@@ -305,6 +314,13 @@ class ChessBoard:
         self.piece_location[recorded_move[direction.value[0]]] = from_square_piece
 
 
+    def convert_coord(self, move_from, move_to):
+        x = (int(int(move_to) / 8)) - (int(int(move_from) / 8))
+        y = (int(move_to) % 8) - (int(move_from) % 8)
+        print(str(x) + ', ' + str(y))
+        return x, y
+
+
 class King:
     def __init__(self, board, color):
         self.color = color
@@ -314,6 +330,14 @@ class King:
             self.image = board.k_image
         self.value = 1000
         self.piece_notation = 'K'
+
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) <= 1 and abs(y) <= 1:
+            return True
+        else:
+            return False
 
 
 class Queen:
@@ -326,6 +350,16 @@ class Queen:
         self.value = 9
         self.piece_notation = 'Q'
 
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) == 0 or abs(y) == 0:
+            return True
+        elif abs(x) == abs(y):
+            return True
+        else:
+            return False
+
 
 class Rook:
     def __init__(self, board, color):
@@ -336,6 +370,14 @@ class Rook:
             self.image = board.r_image
         self.value = 5
         self.piece_notation = 'R'
+
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) == 0 or abs(y) == 0:
+            return True
+        else:
+            return False
 
 
 class Bishop:
@@ -348,6 +390,14 @@ class Bishop:
         self.value = 3
         self.piece_notation = 'B'
 
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) == abs(y):
+            return True
+        else:
+            return False
+
 
 class Knight:
     def __init__(self, board, color):
@@ -358,6 +408,14 @@ class Knight:
             self.image = board.n_image
         self.value = 3
         self.piece_notation = 'N'
+
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) != 0 and abs(y) + abs(x) == 3:
+            return True
+        else:
+            return False
 
 
 class Pawn:
@@ -370,6 +428,13 @@ class Pawn:
         self.value = 1
         self.piece_notation = ''
 
+    def legal_move(self, x_and_y):
+        x = x_and_y[0]
+        y = x_and_y[1]
+        if abs(x) <= 1 and abs(y) <= 1:
+            return True
+        else:
+            return False
 
 if __name__ == '__main__':
     my_controller = ''
