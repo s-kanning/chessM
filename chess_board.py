@@ -8,7 +8,7 @@ import configurations
 
 # TODO: create ability to play 'en passant'
 
-# TODO: last move square color to highlight - check highlight?
+# TODO: add promotion ability
 
 
 class ChessBoard:
@@ -50,6 +50,7 @@ class ChessBoard:
             for i in range(0, 64):
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
+                self._reset_square_color(i, self.buttons[i])
         self.game_state_stack.clear()
         self._new_game_set()
 
@@ -141,8 +142,10 @@ class ChessBoard:
                 self.selected_piece = None
 
             else:  # convert (self.move_from_ind, ind) to x, y
-                x_and_y = self.convert_coord(self.move_from_ind, ind)
+                x_and_y = self.convert_coord(self.move_from_ind, ind)  # TODO board checks if piece == king OR piece == pawn checking pawn and king position
+                # TODO: unexpected behavior, sometimes capture move.(to_squares) are not highlighted
                 if self.selected_piece.legal_move(x_and_y):
+                    # check for special move, castle, 2 pawn, promotion,
 
                     if self.piece_location[ind] is not None:  # there is a piece here, check if color is same
                         if self.piece_location[ind].color == self.selected_piece.color:
@@ -154,7 +157,6 @@ class ChessBoard:
                                 move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
                             else:  # notation for captures by pieces
                                 move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
-
                             self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
                             stack_item = (self.move_from_ind, ind, True)
 
@@ -164,7 +166,16 @@ class ChessBoard:
 
                     self.buttons[ind].configure(image=self.selected_piece.image)
                     self.buttons[ind].configure(text='')
+
+                    self.buttons[self.move_from_ind].configure(fg_color='orange')
+                    self.buttons[ind].configure(fg_color='orange')
+
                     self.buttons[self.move_from_ind].configure(image=self.empty_image)
+
+                    if len(self.game_state_stack) > 0:
+                        self._reset_square_color(self.game_state_stack[-1][0], self.buttons[self.game_state_stack[-1][0]])
+                        self._reset_square_color(self.game_state_stack[-1][1], self.buttons[self.game_state_stack[-1][1]])
+
                     self.piece_location[self.move_from_ind] = None
 
                     self.piece_location[ind] = self.selected_piece
@@ -189,6 +200,13 @@ class ChessBoard:
 
         else:  # if no piece in square, pass
             pass
+
+    # TODO: study mode: reset color after incorrect moves
+    def _reset_square_color(self, coord, button):
+        if (int((int(coord)/8)) + (int(int(coord) % 8))) % 2 == 0:
+            button.configure(self, fg_color=configurations.Light_green)
+        else:
+            button.configure(self, fg_color=configurations.Green)
 
     def _starting_position_setup(self):
         self.white_starting_pieces = []
@@ -430,7 +448,7 @@ class Pawn:
         self.value = 1
         self.piece_notation = ''
 
-    def legal_move(self, x_and_y):  # TODO still need to add en passant, and restrict movement
+    def legal_move(self, x_and_y):  # TODO add en passant and restrict movement
         x = x_and_y[0]
         y = x_and_y[1]
         if self.color == 'w':
