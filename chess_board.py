@@ -142,8 +142,8 @@ class ChessBoard:
                 self.selected_piece = None
 
             else:  # convert (self.move_from_ind, ind) to x, y
-                x_and_y = self.convert_coord(self.move_from_ind, ind)  # TODO board checks if piece == king OR piece == pawn checking pawn and king position
-                # TODO: unexpected behavior, sometimes capture move.(to_squares) are not highlighted
+                x_and_y = self.convert_coord(self.move_from_ind, ind
+                                             )  # TODO board checks if piece == king OR piece == pawn checking pawn and king position
                 if self.selected_piece.legal_move(x_and_y):
                     # check for special move, castle, 2 pawn, promotion,
 
@@ -154,7 +154,7 @@ class ChessBoard:
                         else:
                             if self.selected_piece.piece_notation == '':  # notation for captures by pawns
                                 column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-                                move_played = column_list[int(self.move_from_ind/8)] + 'x' + str(coordinate)
+                                move_played = column_list[int(self.move_from_ind / 8)] + 'x' + str(coordinate)
                             else:  # notation for captures by pieces
                                 move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
                             self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
@@ -167,14 +167,18 @@ class ChessBoard:
                     self.buttons[ind].configure(image=self.selected_piece.image)
                     self.buttons[ind].configure(text='')
 
-                    self.buttons[self.move_from_ind].configure(fg_color='orange')
-                    self.buttons[ind].configure(fg_color='orange')
-
                     self.buttons[self.move_from_ind].configure(image=self.empty_image)
 
                     if len(self.game_state_stack) > 0:
-                        self._reset_square_color(self.game_state_stack[-1][0], self.buttons[self.game_state_stack[-1][0]])
-                        self._reset_square_color(self.game_state_stack[-1][1], self.buttons[self.game_state_stack[-1][1]])
+                        self._reset_square_color(self.game_state_stack[-1][0],
+                                                 self.buttons[self.game_state_stack[-1][0]]
+                                                 )
+                        self._reset_square_color(self.game_state_stack[-1][1],
+                                                 self.buttons[self.game_state_stack[-1][1]]
+                                                 )
+
+                    self.buttons[self.move_from_ind].configure(fg_color='orange')
+                    self.buttons[ind].configure(fg_color='orange')
 
                     self.piece_location[self.move_from_ind] = None
 
@@ -203,7 +207,7 @@ class ChessBoard:
 
     # TODO: study mode: reset color after incorrect moves
     def _reset_square_color(self, coord, button):
-        if (int((int(coord)/8)) + (int(int(coord) % 8))) % 2 == 0:
+        if (int((int(coord) / 8)) + (int(int(coord) % 8))) % 2 == 0:
             button.configure(self, fg_color=configurations.Light_green)
         else:
             button.configure(self, fg_color=configurations.Green)
@@ -328,11 +332,12 @@ class ChessBoard:
         else:  # if capture=False, proceed
             pass
 
-        self.buttons[recorded_move[direction.value[1]]].configure(image=self.piece_location[recorded_move[direction.value[0]]].image)
+        self.buttons[recorded_move[direction.value[1]]].configure(
+            image=self.piece_location[recorded_move[direction.value[0]]].image
+            )
         self.piece_location[recorded_move[direction.value[1]]] = self.piece_location[recorded_move[direction.value[0]]]
         self.buttons[recorded_move[direction.value[0]]].configure(image=from_square_image)
         self.piece_location[recorded_move[direction.value[0]]] = from_square_piece
-
 
     def convert_coord(self, move_from, move_to):
         x = (int(int(move_to) / 8)) - (int(int(move_from) / 8))
