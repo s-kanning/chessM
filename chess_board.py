@@ -54,7 +54,7 @@ class ChessBoard:
         self.game_state_stack.clear()
         self._new_game_set()
 
-    def _connect_chess_images(self):
+    def _connect_chess_images(self):  # TODO replaces images with cleaner images: https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
         self.K_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\K.png"),
             size=(self.image_size, self.image_size)
@@ -133,6 +133,7 @@ class ChessBoard:
                 self.buttons.append(self.view.btn)
                 self.piece_location.append(None)
 
+    # TODO restructure play_move function for clarity
     def play_move(self, coordinate):
         ind = self.coord.index(coordinate)
 
@@ -143,7 +144,7 @@ class ChessBoard:
 
             else:  # convert (self.move_from_ind, ind) to x, y
                 x_and_y = self.convert_coord(self.move_from_ind, ind
-                                             )  # TODO board checks if piece == king OR piece == pawn checking pawn and king position
+                                             )  # TODO board checks if piece ==  king OR piece == pawn checking pawn and king position
                 if self.selected_piece.legal_move(x_and_y):
                     # check for special move, castle, 2 pawn, promotion,
 
@@ -177,8 +178,8 @@ class ChessBoard:
                                                  self.buttons[self.game_state_stack[-1][1]]
                                                  )
 
-                    self.buttons[self.move_from_ind].configure(fg_color='orange')
-                    self.buttons[ind].configure(fg_color='orange')
+                    self.buttons[self.move_from_ind].configure(fg_color=configurations.Highlight_color)
+                    self.buttons[ind].configure(fg_color=configurations.Highlight_color)
 
                     self.piece_location[self.move_from_ind] = None
 
@@ -205,6 +206,166 @@ class ChessBoard:
         else:  # if no piece in square, pass
             pass
 
+    #######################################################################################################################
+    #  Start of play_move Restructuring
+    #######################################################################################################################
+
+
+    def _play_move(self, coordinate):
+        ind = self.coord.index(coordinate)
+        if self._piece_selected_check():  # piece selected
+            if self.move_from_ind is not ind:
+                if self._follow_movement_rules(self.move_from_ind, ind):  # (from, to)  # includes: legal, special, sliding
+                    if self._piece_in_square_check():
+                        # if pieces are same color():
+                        self._capture_piece()
+                        self._move_piece()
+                        self._return_notation()
+                        # else: pass
+                    else:
+                        self._move_piece()
+                        self._return_notation()
+                else:  # illegal move = do nothing
+                    pass
+            else:  # move_from == move_to
+                pass
+            self._deselect_piece()
+        else:  # no piece selected
+            if self._piece_in_square_check():  # square has piece
+                if self._player_turn_check():  # check for color turn
+                    self._select_piece(ind)  # select piece
+                else:
+                    pass
+            else:  # square == empty
+                pass  # no selected piece and empty square = do nothing
+
+#######################################################################################################################
+    # these functions are in the current play_move function and
+    # need to be placed in to the appropriate functions below
+
+                # x_and_y = self.convert_coord(self.move_from_ind, ind)
+                #
+                # if self.selected_piece.legal_move(x_and_y):
+                #     # check for special move, castle, 2 pawn, promotion,
+                #
+                #     if self.piece_location[ind] is not None:  # there is a piece here, check if color is same
+                #         if self.piece_location[ind].color == self.selected_piece.color:
+                #             self.selected_piece = None
+                #             return
+                #         else:
+                #             if self.selected_piece.piece_notation == '':  # notation for captures by pawns
+                #                 column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                #                 move_played = column_list[int(self.move_from_ind / 8)] + 'x' + str(coordinate)
+                #             else:  # notation for captures by pieces
+                #                 move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
+                #             self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
+                #             stack_item = (self.move_from_ind, ind, True)
+                #
+                #     else:
+                #         move_played = str(self.selected_piece.piece_notation) + str(coordinate)
+                #         stack_item = (self.move_from_ind, ind, False)
+                #
+                #     self.buttons[ind].configure(image=self.selected_piece.image)
+                #     self.buttons[ind].configure(text='')
+                #
+                #     self.buttons[self.move_from_ind].configure(image=self.empty_image)
+                #
+                #     if len(self.game_state_stack) > 0:
+                #         self._reset_square_color(self.game_state_stack[-1][0],
+                #                                  self.buttons[self.game_state_stack[-1][0]]
+                #                                  )
+                #         self._reset_square_color(self.game_state_stack[-1][1],
+                #                                  self.buttons[self.game_state_stack[-1][1]]
+                #                                  )
+                #
+                #     self.buttons[self.move_from_ind].configure(fg_color=configurations.Highlight_color)
+                #     self.buttons[ind].configure(fg_color=configurations.Highlight_color)
+                #
+                #     self.piece_location[self.move_from_ind] = None
+                #
+                #     self.piece_location[ind] = self.selected_piece
+                #
+                #     print("move played: " + move_played)
+                #     self.selected_piece = None
+                #     self.move_from_ind = None
+                #     self.move_list.append(move_played)
+                #     self.view_count = len(self.move_list)
+                #
+                #     self.game_state_stack.append(stack_item)  # take tuple indexes (from, to)
+                #
+                #     return move_played, len(self.move_list)  # return move information str(piece_notation + coord)
+                #
+                # else:  # if attempt illegal move, deselect piece
+                #     self.selected_piece = None
+                #     pass
+
+#######################################################################################################################
+
+    def _piece_in_square_check(self):
+        pass  # return True or False
+
+    def _piece_selected_check(self):
+        if self.selected_piece is None:
+            return False
+        else:
+            return True
+
+    def _select_piece(self, ind):
+        self.selected_piece = self.piece_location[ind]
+        self.move_from_ind = ind
+
+    def _special_move(self):
+        # take x and y
+        # take game_stack
+        # take board/piece_location
+
+        # pawn 2 move
+        # en passant
+        # castle both sides
+        pass
+
+    def _check_slide(self):
+        # for i in range(x/y):  # larger of the 2, abs()
+        # check if there is a piece in the square, if yes, return false: up until but not including the final square
+        pass
+
+    def _capture_piece(self):
+        # change selected_piece's piece_location[index]
+        # update button_image[index]
+        # notation
+        pass  # return True?
+
+    def _player_turn_check(self):
+        # move_number = len(game_stack)
+        # if move_number is odd,
+        #   white
+        # else:
+        #   black
+        pass
+
+    def _move_piece(self):
+        # change selected_piece's piece_location[index]
+        # update button_image[index]
+        # notation
+        pass
+
+    def _return_notation(self):
+        pass
+
+    def _deselect_piece(self):
+        self.selected_piece = None
+
+    def _follow_movement_rules(self, move_from_ind, move_to_ind):
+        # convert index to x and y
+        # check for legal_move
+        # check for special_move
+        # check for sliding_move
+        pass
+
+
+#######################################################################################################################
+#  End of play_move_restructuring
+#######################################################################################################################
     # TODO: study mode: reset color after incorrect moves
     def _reset_square_color(self, coord, button):
         if (int((int(coord) / 8)) + (int(int(coord) % 8))) % 2 == 0:
@@ -314,7 +475,7 @@ class ChessBoard:
 
     # def game_state_append(self, state):  # necessary?
     #     self.game_state_stack.append(state)
-    #
+
     def game_state_pop(self, state):  # necessary?
         self.game_state_stack.pop(state)
 
@@ -342,7 +503,6 @@ class ChessBoard:
     def convert_coord(self, move_from, move_to):
         x = (int(int(move_to) / 8)) - (int(int(move_from) / 8))
         y = (int(move_to) % 8) - (int(move_from) % 8)
-        print(str(x) + ', ' + str(y))
         return x, y
 
 
@@ -453,7 +613,7 @@ class Pawn:
         self.value = 1
         self.piece_notation = ''
 
-    def legal_move(self, x_and_y):  # TODO add en passant and restrict movement
+    def legal_move(self, x_and_y):
         x = x_and_y[0]
         y = x_and_y[1]
         if self.color == 'w':
