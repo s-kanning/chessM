@@ -178,9 +178,18 @@ class ChessBoard:
         # take game_stack
         # take board/piece_location
 
-        # pawn 2 move
-        # en passant
+        # if self.selected_piece == pawn
+        # pawn 2 move - only if on starting row
+
+        # en passant - only playable if previous move is a double pawn move, pass the available square
+
+        # if pawn reaches row 8 or row 1 == queen
+
         # castle both sides
+        # if self.selected_piece == king
+        # if at starting square can move 2, else cannot move 2
+        # also check if a rook is at the starting square # need to add something that moves the rook, also the notation
+
         pass
 
     def _check_slide(self):
@@ -256,7 +265,7 @@ class ChessBoard:
 
     def _follow_movement_rules(self, move_from_ind, move_to_ind):
         # convert index to x and y
-        x_and_y = self.convert_coord(move_from_ind, move_to_ind)
+        x_and_y = self.convert_coord_change(move_from_ind, move_to_ind)
 
         # check for legal_move
         if self.selected_piece.legal_move(x_and_y):
@@ -265,6 +274,7 @@ class ChessBoard:
             return False
 
         # check for special_move # TODO board checks if piece ==  king OR piece == pawn checking pawn and king position
+        # check move_from_ind
 
         # TODO: create ability to castle O-O, O-O-O
 
@@ -410,7 +420,7 @@ class ChessBoard:
         self.buttons[recorded_move[direction.value[0]]].configure(image=from_square_image)
         self.piece_location[recorded_move[direction.value[0]]] = from_square_piece
 
-    def convert_coord(self, move_from, move_to):
+    def convert_coord_change(self, move_from, move_to):
         x = (int(int(move_to) / 8)) - (int(int(move_from) / 8))
         y = (int(move_to) % 8) - (int(move_from) % 8)
         return x, y
