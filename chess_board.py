@@ -201,16 +201,43 @@ class ChessBoard:
                         return True
                     else:
                         return False
-        # elif self.selected_piece.piece_notation == 'K':
-        #     if x_and_y[0] == 2:
-        #         if move_from == 40 or move_from == 47:
-        #             pass
-        #         else:
-        #             return False
-        #     else:
-        #         return True
+        elif self.selected_piece.piece_notation == 'K':
+            if abs(x_and_y[0]) == 2:
+                print(x_and_y[0])
+                print(move_from)
+                if move_from == 32:
+                    if x_and_y[0] == -2 and self.piece_location[0] is not None:
+                        if self.piece_location[0].piece_notation == 'R':
+                            return True
+                        else:
+                            return False
+                    elif x_and_y[0] == 2 and self.piece_location[56] is not None:
+                        if self.piece_location[56].piece_notation == 'R':
+                            return True
+                        else:
+                            return False
+                    else:
+                        return False
+                elif move_from == 39:
+                    if x_and_y[0] == -2 and self.piece_location[7] is not None:
+                        if self.piece_location[7].piece_notation == 'R':
+                            return True
+                        else:
+                            return False
+                    elif x_and_y[0] == 2 and self.piece_location[63] is not None:
+                        if self.piece_location[63].piece_notation == 'R':
+                            return True
+                        else:
+                            return False
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return True
         else:
             pass
+
         return True
 
         # castle both sides
