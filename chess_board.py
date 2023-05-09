@@ -173,24 +173,51 @@ class ChessBoard:
         self.selected_piece = self.piece_location[ind]
         self.move_from_ind = ind
 
-    def _special_move(self):
-        # take x and y
-        # take game_stack
-        # take board/piece_location
+    def _special_move_rules(self, move_from, move_to, x_and_y):
+        if self.selected_piece.piece_notation == '':
+            if x_and_y[0] == 0:
+                if self.piece_location[move_to] is not None:
+                    return False
+                else:
+                    if abs(x_and_y[1]) == 2:
+                        if ((move_from - 1) % 8) == 0 or ((move_from - 6) % 8) == 0:
+                            return True
+                        else:
+                            return False
+                    else:
+                        if (move_to % 8) == 0 or ((move_to - 7) % 8) == 0:
+                            print('promotion')
+                            return True
+                        else:
+                            return True
 
-        # if self.selected_piece == pawn
-        # pawn 2 move - only if on starting row
-
-        # en passant - only playable if previous move is a double pawn move, pass the available square
-
-        # if pawn reaches row 8 or row 1 == queen
+            else:  # capture, check for en passant
+                if self.piece_location[move_to] is not None:
+                    return True
+                else:
+                    previous_move = self.game_state_stack[-1]
+                    pre_x_and_y = self.convert_coord_change(previous_move[0], previous_move[1])
+                    if pre_x_and_y[1] == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(previous_move[1] - move_to) == 1:
+                        return True
+                    else:
+                        return False
+        # elif self.selected_piece.piece_notation == 'K':
+        #     if x_and_y[0] == 2:
+        #         if move_from == 40 or move_from == 47:
+        #             pass
+        #         else:
+        #             return False
+        #     else:
+        #         return True
+        else:
+            pass
+        return True
 
         # castle both sides
-        # if self.selected_piece == king
+        # if self.selected_piece == king:
         # if at starting square can move 2, else cannot move 2
         # also check if a rook is at the starting square # need to add something that moves the rook, also the notation
 
-        pass
 
     def _check_slide(self):
         # for i in range(x/y):  # larger of the 2, abs()
@@ -238,7 +265,7 @@ class ChessBoard:
 
         self.piece_location[ind] = self.selected_piece
 
-    def _return_notation(self, ind, coordinate, capture, special=bool):
+    def _return_notation(self, ind, coordinate, capture, castle=bool):
 
         if capture:  # capture notation
             if self.selected_piece.piece_notation == '':  # notation for captures by pawns
@@ -268,7 +295,7 @@ class ChessBoard:
         x_and_y = self.convert_coord_change(move_from_ind, move_to_ind)
 
         # check for legal_move
-        if self.selected_piece.legal_move(x_and_y):
+        if self.selected_piece.legal_move(x_and_y) and self._special_move_rules(move_from_ind, move_to_ind, x_and_y):
             return True
         else:
             return False
