@@ -341,7 +341,7 @@ class ChessBoard:
 
     def _en_passant(self):
         prev_move = self.game_state_stack[-1]
-        self.capture_stack.append(prev_move[1])
+        self.capture_stack.append(self.piece_location[prev_move[1]])
         self.piece_location[prev_move[1]] = None
         self.buttons[prev_move[1]].configure(image=self.empty_image)
 
@@ -520,25 +520,43 @@ class ChessBoard:
 
     # add conditional for peruse move to pop captured piece
     def peruse_move(self, direction, index=int):
-        recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool, special)
+        recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool, special_bool)
         from_square_image = self.empty_image
         from_square_piece = None
-        if recorded_move[2]:  # capture=True
-            if direction.value[0] == 0:  # if forward and capture=True, push piece onto stack
-                self.capture_stack.append(self.piece_location[recorded_move[direction.value[1]]])
-            else:  # if backward and capture=True, pop item off stack and place on board
-                from_square_piece = self.capture_stack.pop()
-                from_square_image = from_square_piece.image
-        else:  # if capture=False, proceed
-            pass
 
-        #TODO: add castle and en passant logic
-
+        if not recorded_move[3]:  # special is false
+            if recorded_move[2]:  # capture=True
+                    if direction.value[0] == 0:  # if forward and capture=True, push piece onto stack
+                        self.capture_stack.append(self.piece_location[recorded_move[direction.value[1]]])
+                    else:  # if backward and capture=True, pop item off stack and place on board
+                        from_square_piece = self.capture_stack.pop()
+                        from_square_image = from_square_piece.image
+            else:  # if capture=False, proceed
+                pass
+        else:  # special is True
+            if recorded_move[2]:  # special and capture = en passant (unless capture and promotion)
+                prev_move = self.game_state_stack[int(index)-1]
+                prev_move_square = prev_move[1]
+                if direction.value[0] == 0:  # forward
+                    # re-add the captured pawn to the stack
+                    self.capture_stack.append(self.piece_location[prev_move_square])
+                    self.buttons[prev_move_square].configure(image=self.empty_image)
+                    self.piece_location[prev_move_square] = None
+                else:  # backward
+                    en_passant_piece = self.capture_stack.pop()
+                    en_passant_image = en_passant_piece.image
+                    self.piece_location[prev_move_square] = en_passant_piece
+                    self.buttons[prev_move_square].configure(image=en_passant_image)
+            else:
+                # castle
+                pass
 
         self.buttons[recorded_move[direction.value[1]]].configure(
             image=self.piece_location[recorded_move[direction.value[0]]].image
         )
-        self.piece_location[recorded_move[direction.value[1]]] = self.piece_location[recorded_move[direction.value[0]]]
+        self.piece_location[recorded_move[direction.value[1]]] = self.piece_location[
+            recorded_move[direction.value[0]]]
+
         self.buttons[recorded_move[direction.value[0]]].configure(image=from_square_image)
         self.piece_location[recorded_move[direction.value[0]]] = from_square_piece
 
