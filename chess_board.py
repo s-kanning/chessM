@@ -214,7 +214,9 @@ class ChessBoard:
                 else:
                     previous_move = self.game_state_stack[-1]
                     pre_x_and_y = self.convert_coord_change(previous_move[0], previous_move[1])
-                    if abs(pre_x_and_y[1]) == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(previous_move[1] - move_to) == 1:
+                    if abs(pre_x_and_y[1]) == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(
+                            previous_move[1] - move_to
+                            ) == 1:
                         return True, 'en passant'
                     else:
                         return False, None
@@ -256,11 +258,6 @@ class ChessBoard:
             pass
 
         return True, None
-
-        # castle both sides
-        # if self.selected_piece == king:
-        # if at starting square can move 2, else cannot move 2
-        # also check if a rook is at the starting square # need to add something that moves the rook, also the notation
 
     def _check_slide(self):
         # for i in range(x/y):  # larger of the 2, abs()
@@ -309,30 +306,28 @@ class ChessBoard:
         self.piece_location[ind] = self.selected_piece
 
     def _castle(self, ind, direction):
-        if ind == 48:  # 48 = 56 -> 40
+        if ind == 48:  # 48 = 56 -> 40 Black O-O
             if direction == 1:
                 move_from = 56
                 move_to = 40
             else:
                 move_from = 40
                 move_to = 56
-        elif ind == 16:  # 16 = 0 -> 24
-            # move rook on 0 to 24
+        elif ind == 16:  # 16 = 0 -> 24 Black O-O-O
             if direction == 1:
                 move_from = 0
                 move_to = 24
             else:
                 move_from = 24
                 move_to = 0
-        elif ind == 55:  # 55 = 63 -> 47
-            # move rook on 63 to 47
+        elif ind == 55:  # 55 = 63 -> 47 White O-O
             if direction == 1:
                 move_from = 63
                 move_to = 47
             else:
                 move_from = 47
                 move_to = 63
-        elif ind == 23:  # 23 = 7 -> 31
+        elif ind == 23:  # 23 = 7 -> 31 White O-O-O
             if direction == 1:
                 move_from = 7
                 move_to = 31
@@ -400,13 +395,6 @@ class ChessBoard:
             return True, movement[1]
         else:
             return False, None
-
-        # check for special_move # TODO board checks if piece ==  king OR piece == pawn checking pawn and king position
-        # check move_from_ind
-
-        # TODO: create ability to castle O-O, O-O-O
-
-        # TODO: create ability to play 'en passant'
 
         # TODO: add promotion ability
 
@@ -519,15 +507,9 @@ class ChessBoard:
             else:
                 pass  # to skip the empty squares
 
-        # self.game_state_stack.append(list(self.piece_location))
-
-    # def game_state_append(self, state):  # necessary?
-    #     self.game_state_stack.append(state)
-
     def game_state_pop(self, state):  # necessary?
         self.game_state_stack.pop(state)
 
-    # add conditional for peruse move to pop captured piece
     def peruse_move(self, direction, index=int):
         recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool, special_bool)
         from_square_image = self.empty_image
@@ -535,16 +517,16 @@ class ChessBoard:
 
         if not recorded_move[3]:  # special is false
             if recorded_move[2]:  # capture=True
-                    if direction.value[0] == 0:  # if forward and capture=True, push piece onto stack
-                        self.capture_stack.append(self.piece_location[recorded_move[direction.value[1]]])
-                    else:  # if backward and capture=True, pop item off stack and place on board
-                        from_square_piece = self.capture_stack.pop()
-                        from_square_image = from_square_piece.image
+                if direction.value[0] == 0:  # if forward and capture=True, push piece onto stack
+                    self.capture_stack.append(self.piece_location[recorded_move[direction.value[1]]])
+                else:  # if backward and capture=True, pop item off stack and place on board
+                    from_square_piece = self.capture_stack.pop()
+                    from_square_image = from_square_piece.image
             else:  # if capture=False, proceed
                 pass
         else:  # special is True
             if recorded_move[2]:  # special and capture = en passant (unless capture and promotion)
-                prev_move = self.game_state_stack[int(index)-1]
+                prev_move = self.game_state_stack[int(index) - 1]
                 prev_move_square = prev_move[1]
                 if direction.value[0] == 0:  # forward
                     # re-add the captured pawn to the stack
