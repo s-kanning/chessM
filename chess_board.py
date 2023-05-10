@@ -259,10 +259,40 @@ class ChessBoard:
 
         return True, None
 
-    def _check_slide(self):
-        # for i in range(x/y):  # larger of the 2, abs()
-        # check if there is a piece in the square, if yes, return false: up until but not including the final square
-        pass
+    def _check_slide(self, move_square, x_and_y):
+        if self.selected_piece.piece_notation == 'N':
+            return True
+
+        x = x_and_y[0]
+        y = x_and_y[1]
+
+        if abs(x) >= abs(y):
+            j = x
+        else:
+            j = y
+
+        # if x changes +/- 8, if y changes +/- 1
+        if x == 0:
+            a = 0
+        elif x > 0:
+            a = 8
+        else:
+            a = -8
+
+        if y == 0:
+            b = 0
+        elif y > 0:
+            b = 1
+        else:
+            b = -1
+
+        for i in range(abs(j) - 1):
+            move_square += (a + b)
+            if self.piece_location[move_square] is None:
+                continue
+            else:
+                return False
+        return True
 
     def _capture_piece(self, ind):
         self.capture_stack.append(self.piece_location[ind])  # add captured piece to stack
@@ -391,7 +421,9 @@ class ChessBoard:
 
         # check for legal_move
         movement = self._special_move_rules(move_from_ind, move_to_ind, x_and_y)
-        if self.selected_piece.legal_move(x_and_y) and movement[0]:
+        if self.selected_piece.legal_move(x_and_y) \
+                and movement[0] \
+                and self._check_slide(move_from_ind, x_and_y):
             return True, movement[1]
         else:
             return False, None
