@@ -136,24 +136,27 @@ class ChessBoard:
                 if movement[0]:  # (from, to)  # includes: legal, special, sliding
                     if self._piece_in_square_check(ind):
                         if self.piece_location[ind].color != self.selected_piece.color:
-                            self._capture_piece(ind)
-                            self._move_piece(ind)
-                            return self._return_notation(ind, coordinate, True, False)
+                            if movement[1] == 'promotion':
+                                self._capture_piece(ind)
+                                self._move_piece(ind)
+                                self._promotion(ind)
+                                return self._return_notation(ind, coordinate, True, True)
+                            else:
+                                self._capture_piece(ind)
+                                self._move_piece(ind)
+                                return self._return_notation(ind, coordinate, True, False)
                         else:
                             pass
                     else:
                         if movement[1] == 'castle':
-                            print('castle')
                             self._move_piece(ind)
                             self._castle(ind, 1)  # 1 = forward
                             return self._return_notation(ind, coordinate, False, True)
                         elif movement[1] == 'en passant':
-                            print('en passant')
                             self._move_piece(ind)
                             self._en_passant()
                             return self._return_notation(ind, coordinate, True, True)
                         elif movement[1] == 'promotion':
-                            print('promotion')
                             self._move_piece(ind)
                             self._promotion(ind)
                             return self._return_notation(ind, coordinate, False, True)
@@ -203,27 +206,27 @@ class ChessBoard:
                             return False, None
                     else:
                         if (move_to % 8) == 0 or ((move_to - 7) % 8) == 0:
-                            print('promotion')
                             return True, 'promotion'
                         else:
                             return True, None
 
-            else:  # capture, check for en passant
+            else:  # capture, check for en passant and check for promotion
                 if self.piece_location[move_to] is not None:
-                    return True, None
+                    if (move_to % 8) == 0 or ((move_to - 7) % 8) == 0:
+                        return True, 'promotion'
+                    else:
+                        return True, None
                 else:
                     previous_move = self.game_state_stack[-1]
                     pre_x_and_y = self.convert_coord_change(previous_move[0], previous_move[1])
                     if abs(pre_x_and_y[1]) == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(
                             previous_move[1] - move_to
-                            ) == 1:
+                    ) == 1:
                         return True, 'en passant'
                     else:
                         return False, None
         elif self.selected_piece.piece_notation == 'K':
             if abs(x_and_y[0]) == 2:
-                print(x_and_y[0])
-                print(move_from)
                 if move_from == 32:
                     if x_and_y[0] == -2 and self.piece_location[0] is not None:
                         if self.piece_location[0].piece_notation == 'R':
@@ -316,8 +319,6 @@ class ChessBoard:
         # return notation
 
         self.buttons[ind].configure(image=self.selected_piece.image)
-        self.buttons[ind].configure(text='')
-
         self.buttons[self.move_from_ind].configure(image=self.empty_image)
 
         if len(self.game_state_stack) > 0:
@@ -383,21 +384,29 @@ class ChessBoard:
         color = self.selected_piece.color
         new_piece = Queen(self, color)
         self.buttons[ind].configure(image=new_piece.image)
+        self.piece_location[ind] = new_piece
 
     def _return_notation(self, ind, coordinate, capture, special_move):
 
         if capture:  # capture notation
             if self.selected_piece.piece_notation == '':  # notation for captures by pawns
-                column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-                move_played = column_list[int(self.move_from_ind / 8)] + 'x' + str(coordinate)
+                if (ind % 8) == 0 or ((ind - 7) % 8) == 0:
+                    column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                    move_played = column_list[int(self.move_from_ind / 8)] + 'x' + str(coordinate) + "=Q"
+                else:
+                    column_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+                    move_played = column_list[int(self.move_from_ind / 8)] + 'x' + str(coordinate)
             else:  # notation for captures by pieces
                 move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
         else:  # standard notation
             if special_move:  # castling
-                if ind == 48 or ind == 55:  # squares of King-side castling
-                    move_played = "O-O"
-                else:
-                    move_played = "O-O-O"
+                if self.selected_piece.piece_notation == 'K':
+                    if ind == 48 or ind == 55:  # squares of King-side castling
+                        move_played = "O-O"
+                    else:
+                        move_played = "O-O-O"
+                else:  # special move == promotion
+                    move_played = str(coordinate) + "=Q"
             else:
                 move_played = str(self.selected_piece.piece_notation) + str(coordinate)
 
@@ -427,12 +436,6 @@ class ChessBoard:
             return True, movement[1]
         else:
             return False, None
-
-        # TODO: add promotion ability
-
-        # check for sliding_move
-
-        pass
 
     # TODO: study mode: reset color after incorrect moves
     def _reset_square_color(self, coord, button):
