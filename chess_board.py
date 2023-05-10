@@ -45,6 +45,7 @@ class ChessBoard:
                 self.buttons[i].configure(image=self.empty_image)
                 self._reset_square_color(i, self.buttons[i])
         self.game_state_stack.clear()
+        self.capture_stack.clear()
         self._new_game_set()
 
     def _connect_chess_images(
@@ -131,18 +132,34 @@ class ChessBoard:
         ind = self.coord.index(coordinate)
         if self._piece_selected_check():  # piece selected
             if self.move_from_ind is not ind:
-                if self._follow_movement_rules(self.move_from_ind, ind
-                                               ):  # (from, to)  # includes: legal, special, sliding
+                movement = self._follow_movement_rules(self.move_from_ind, ind)
+                if movement[0]:  # (from, to)  # includes: legal, special, sliding
                     if self._piece_in_square_check(ind):
                         if self.piece_location[ind].color != self.selected_piece.color:
                             self._capture_piece(ind)
                             self._move_piece(ind)
-                            return self._return_notation(ind, coordinate, True)
+                            return self._return_notation(ind, coordinate, True, False)
                         else:
                             pass
                     else:
-                        self._move_piece(ind)
-                        return self._return_notation(ind, coordinate, False)
+                        if movement[1] == 'castle':
+                            print('castle')
+                            self._move_piece(ind)
+                            self._castle(ind)
+                            return self._return_notation(ind, coordinate, False, True)
+                        elif movement[1] == 'en passant':
+                            print('en passant')
+                            self._move_piece(ind)
+                            self._en_passant()
+                            return self._return_notation(ind, coordinate, True, True)
+                        elif movement[1] == 'promotion':
+                            print('promotion')
+                            self._move_piece(ind)
+                            self._promotion(ind)
+                            return self._return_notation(ind, coordinate, False, True)
+                        else:
+                            self._move_piece(ind)
+                            return self._return_notation(ind, coordinate, False, False)
                 else:  # illegal move = do nothing
                     pass
             else:  # move_from == move_to
@@ -177,30 +194,30 @@ class ChessBoard:
         if self.selected_piece.piece_notation == '':
             if x_and_y[0] == 0:
                 if self.piece_location[move_to] is not None:
-                    return False
+                    return False, None
                 else:
                     if abs(x_and_y[1]) == 2:
                         if ((move_from - 1) % 8) == 0 or ((move_from - 6) % 8) == 0:
-                            return True
+                            return True, None
                         else:
-                            return False
+                            return False, None
                     else:
                         if (move_to % 8) == 0 or ((move_to - 7) % 8) == 0:
                             print('promotion')
-                            return True
+                            return True, 'promotion'
                         else:
-                            return True
+                            return True, None
 
             else:  # capture, check for en passant
                 if self.piece_location[move_to] is not None:
-                    return True
+                    return True, None
                 else:
                     previous_move = self.game_state_stack[-1]
                     pre_x_and_y = self.convert_coord_change(previous_move[0], previous_move[1])
-                    if pre_x_and_y[1] == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(previous_move[1] - move_to) == 1:
-                        return True
+                    if abs(pre_x_and_y[1]) == 2 and self.piece_location[previous_move[1]].piece_notation == '' and abs(previous_move[1] - move_to) == 1:
+                        return True, 'en passant'
                     else:
-                        return False
+                        return False, None
         elif self.selected_piece.piece_notation == 'K':
             if abs(x_and_y[0]) == 2:
                 print(x_and_y[0])
@@ -208,43 +225,42 @@ class ChessBoard:
                 if move_from == 32:
                     if x_and_y[0] == -2 and self.piece_location[0] is not None:
                         if self.piece_location[0].piece_notation == 'R':
-                            return True
+                            return True, 'castle'
                         else:
-                            return False
+                            return False, None
                     elif x_and_y[0] == 2 and self.piece_location[56] is not None:
                         if self.piece_location[56].piece_notation == 'R':
-                            return True
+                            return True, 'castle'
                         else:
-                            return False
+                            return False, None
                     else:
                         return False
                 elif move_from == 39:
                     if x_and_y[0] == -2 and self.piece_location[7] is not None:
                         if self.piece_location[7].piece_notation == 'R':
-                            return True
+                            return True, 'castle'
                         else:
-                            return False
+                            return False, None
                     elif x_and_y[0] == 2 and self.piece_location[63] is not None:
                         if self.piece_location[63].piece_notation == 'R':
-                            return True
+                            return True, 'castle'
                         else:
-                            return False
+                            return False, None
                     else:
-                        return False
+                        return False, None
                 else:
-                    return False
+                    return False, None
             else:
-                return True
+                return True, None
         else:
             pass
 
-        return True
+        return True, None
 
         # castle both sides
         # if self.selected_piece == king:
         # if at starting square can move 2, else cannot move 2
         # also check if a rook is at the starting square # need to add something that moves the rook, also the notation
-
 
     def _check_slide(self):
         # for i in range(x/y):  # larger of the 2, abs()
@@ -292,7 +308,49 @@ class ChessBoard:
 
         self.piece_location[ind] = self.selected_piece
 
-    def _return_notation(self, ind, coordinate, capture, castle=bool):
+    def _castle(self, ind):
+        if ind == 48:
+            # move rook on 56 to 40
+            rook = self.piece_location[56]
+            self.piece_location[40] = rook
+            self.buttons[40].configure(image=rook.image)
+            self.buttons[56].configure(image=self.empty_image)
+            self.piece_location[56] = None
+        elif ind == 16:
+            # move rook on 0 to 24
+            rook = self.piece_location[0]
+            self.piece_location[24] = rook
+            self.buttons[24].configure(image=rook.image)
+            self.buttons[0].configure(image=self.empty_image)
+            self.piece_location[0] = None
+        elif ind == 55:
+            # move rook on 63 to 47
+            rook = self.piece_location[63]
+            self.piece_location[47] = rook
+            self.buttons[47].configure(image=rook.image)
+            self.buttons[63].configure(image=self.empty_image)
+            self.piece_location[63] = None
+        elif ind == 23:
+            rook = self.piece_location[7]
+            self.piece_location[31] = rook
+            self.buttons[31].configure(image=rook.image)
+            self.buttons[7].configure(image=self.empty_image)
+            self.piece_location[7] = None
+        else:
+            pass
+
+    def _en_passant(self):
+        prev_move = self.game_state_stack[-1]
+        self.capture_stack.append(prev_move[1])
+        self.piece_location[prev_move[1]] = None
+        self.buttons[prev_move[1]].configure(image=self.empty_image)
+
+    def _promotion(self, ind):
+        color = self.selected_piece.color
+        new_piece = Queen(self, color)
+        self.buttons[ind].configure(image=new_piece.image)
+
+    def _return_notation(self, ind, coordinate, capture, special_move):
 
         if capture:  # capture notation
             if self.selected_piece.piece_notation == '':  # notation for captures by pawns
@@ -301,9 +359,15 @@ class ChessBoard:
             else:  # notation for captures by pieces
                 move_played = str(self.selected_piece.piece_notation) + 'x' + str(coordinate)
         else:  # standard notation
-            move_played = str(self.selected_piece.piece_notation) + str(coordinate)
+            if special_move:  # castling
+                if ind == 48 or ind == 55:  # squares of King-side castling
+                    move_played = "O-O"
+                else:
+                    move_played = "O-O-O"
+            else:
+                move_played = str(self.selected_piece.piece_notation) + str(coordinate)
 
-        stack_item = (self.move_from_ind, ind, capture)
+        stack_item = (self.move_from_ind, ind, capture, special_move)
 
         self.move_from_ind = None
         self.selected_piece = None
@@ -322,10 +386,11 @@ class ChessBoard:
         x_and_y = self.convert_coord_change(move_from_ind, move_to_ind)
 
         # check for legal_move
-        if self.selected_piece.legal_move(x_and_y) and self._special_move_rules(move_from_ind, move_to_ind, x_and_y):
-            return True
+        movement = self._special_move_rules(move_from_ind, move_to_ind, x_and_y)
+        if self.selected_piece.legal_move(x_and_y) and movement[0]:
+            return True, movement[1]
         else:
-            return False
+            return False, None
 
         # check for special_move # TODO board checks if piece ==  king OR piece == pawn checking pawn and king position
         # check move_from_ind
@@ -455,7 +520,7 @@ class ChessBoard:
 
     # add conditional for peruse move to pop captured piece
     def peruse_move(self, direction, index=int):
-        recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool)
+        recorded_move = self.game_state_stack[index]  # select tuple (from, to, capture_bool, special)
         from_square_image = self.empty_image
         from_square_piece = None
         if recorded_move[2]:  # capture=True
@@ -466,6 +531,9 @@ class ChessBoard:
                 from_square_image = from_square_piece.image
         else:  # if capture=False, proceed
             pass
+
+        #TODO: add castle and en passant logic
+
 
         self.buttons[recorded_move[direction.value[1]]].configure(
             image=self.piece_location[recorded_move[direction.value[0]]].image
