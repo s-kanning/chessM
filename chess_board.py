@@ -145,7 +145,7 @@ class ChessBoard:
                         if movement[1] == 'castle':
                             print('castle')
                             self._move_piece(ind)
-                            self._castle(ind)
+                            self._castle(ind, 1)  # 1 = forward
                             return self._return_notation(ind, coordinate, False, True)
                         elif movement[1] == 'en passant':
                             print('en passant')
@@ -308,36 +308,45 @@ class ChessBoard:
 
         self.piece_location[ind] = self.selected_piece
 
-    def _castle(self, ind):
-        if ind == 48:
-            # move rook on 56 to 40
-            rook = self.piece_location[56]
-            self.piece_location[40] = rook
-            self.buttons[40].configure(image=rook.image)
-            self.buttons[56].configure(image=self.empty_image)
-            self.piece_location[56] = None
-        elif ind == 16:
+    def _castle(self, ind, direction):
+        if ind == 48:  # 48 = 56 -> 40
+            if direction == 1:
+                move_from = 56
+                move_to = 40
+            else:
+                move_from = 40
+                move_to = 56
+        elif ind == 16:  # 16 = 0 -> 24
             # move rook on 0 to 24
-            rook = self.piece_location[0]
-            self.piece_location[24] = rook
-            self.buttons[24].configure(image=rook.image)
-            self.buttons[0].configure(image=self.empty_image)
-            self.piece_location[0] = None
-        elif ind == 55:
+            if direction == 1:
+                move_from = 0
+                move_to = 24
+            else:
+                move_from = 24
+                move_to = 0
+        elif ind == 55:  # 55 = 63 -> 47
             # move rook on 63 to 47
-            rook = self.piece_location[63]
-            self.piece_location[47] = rook
-            self.buttons[47].configure(image=rook.image)
-            self.buttons[63].configure(image=self.empty_image)
-            self.piece_location[63] = None
-        elif ind == 23:
-            rook = self.piece_location[7]
-            self.piece_location[31] = rook
-            self.buttons[31].configure(image=rook.image)
-            self.buttons[7].configure(image=self.empty_image)
-            self.piece_location[7] = None
+            if direction == 1:
+                move_from = 63
+                move_to = 47
+            else:
+                move_from = 47
+                move_to = 63
+        elif ind == 23:  # 23 = 7 -> 31
+            if direction == 1:
+                move_from = 7
+                move_to = 31
+            else:
+                move_from = 31
+                move_to = 756
         else:
-            pass
+            return
+
+        rook = self.piece_location[move_from]
+        self.piece_location[move_to] = rook
+        self.buttons[move_to].configure(image=rook.image)
+        self.buttons[move_from].configure(image=self.empty_image)
+        self.piece_location[move_from] = None
 
     def _en_passant(self):
         prev_move = self.game_state_stack[-1]
@@ -548,8 +557,11 @@ class ChessBoard:
                     self.piece_location[prev_move_square] = en_passant_piece
                     self.buttons[prev_move_square].configure(image=en_passant_image)
             else:
-                # castle
-                pass
+                # castle - move the rook
+                if direction.value[0] == 0:  # forward
+                    self._castle(recorded_move[1], 1)
+                else:  # backward
+                    self._castle(recorded_move[1], -1)
 
         self.buttons[recorded_move[direction.value[1]]].configure(
             image=self.piece_location[recorded_move[direction.value[0]]].image
