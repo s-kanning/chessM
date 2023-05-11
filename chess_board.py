@@ -43,7 +43,7 @@ class ChessBoard:
             for i in range(0, 64):
                 self.piece_location[i] = None
                 self.buttons[i].configure(image=self.empty_image)
-                self._reset_square_color(i, self.buttons[i])
+                self.reset_square_color(i, self.buttons[i])
         self.game_state_stack.clear()
         self.capture_stack.clear()
         self._new_game_set()
@@ -316,25 +316,23 @@ class ChessBoard:
     def _move_piece(self, ind):
         # change selected_piece's piece_location[index]
         # update button_image[index]
-        # return notation
 
         self.buttons[ind].configure(image=self.selected_piece.image)
         self.buttons[self.move_from_ind].configure(image=self.empty_image)
 
         if len(self.game_state_stack) > 0:
-            self._reset_square_color(self.game_state_stack[-1][0],
-                                     self.buttons[self.game_state_stack[-1][0]]
-                                     )
-            self._reset_square_color(self.game_state_stack[-1][1],
-                                     self.buttons[self.game_state_stack[-1][1]]
-                                     )
+            self.reset_square_color(self.game_state_stack[-1][0])
+            self.reset_square_color(self.game_state_stack[-1][1])
 
-        self.buttons[self.move_from_ind].configure(fg_color=configurations.Highlight_color)
-        self.buttons[ind].configure(fg_color=configurations.Highlight_color)
+        self.highlight_move((self.move_from_ind, ind))
 
         self.piece_location[self.move_from_ind] = None
 
         self.piece_location[ind] = self.selected_piece
+
+    def highlight_move(self, move):
+        self.buttons[move[0]].configure(fg_color=configurations.Highlight_color)
+        self.buttons[move[1]].configure(fg_color=configurations.Highlight_color)
 
     def _castle(self, ind, direction):
         if ind == 48:  # 48 = 56 -> 40 Black O-O
@@ -438,11 +436,11 @@ class ChessBoard:
             return False, None
 
     # TODO: study mode: reset color after incorrect moves
-    def _reset_square_color(self, coord, button):
+    def reset_square_color(self, coord):
         if (int((int(coord) / 8)) + (int(int(coord) % 8))) % 2 == 0:
-            button.configure(self, fg_color=configurations.Light_green)
+            self.buttons[coord].configure(self, fg_color=configurations.Light_green)
         else:
-            button.configure(self, fg_color=configurations.Green)
+            self.buttons[coord].configure(self, fg_color=configurations.Green)
 
     def _starting_position_setup(self):
         self.white_starting_pieces = []

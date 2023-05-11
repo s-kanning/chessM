@@ -270,7 +270,7 @@ class Controller:
                     elif self.app_mode == ChessMode.STUDY:
                         self.view.move_entry.delete('0', 'end')
                         self.view.move_entry.insert('0', str(player_move[0]))
-                        self.submit_move()
+                        self.submit_move(player_move)
                     elif self.app_mode == ChessMode.CREATE:
                         self.update_move_list_textbox(player_move)
                         pass
@@ -305,11 +305,10 @@ class Controller:
         elif self.app_mode == ChessMode.INACTIVE:
             pass
 
-    def submit_move(self):  # add some test cases to prevent breaking program
+    def submit_move(self, player_move):  # add some test cases to prevent breaking program
         if self.view.move_entry.get() != '':
             if len(self.model.active_moves_only) >= self.study_board.view_count:
-                if self.view.move_entry.get() == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
-                    player_move = self.view.move_entry.get(), len(self.study_board.move_list)
+                if player_move[0] == self.model.active_moves_only[self.study_board.view_count - 1]:  # -1 for 0 indexing
                     self.update_move_list_textbox(player_move)
                     self.view.message_correct()
                     self.view.move_entry.delete('0', 'end')
@@ -325,12 +324,15 @@ class Controller:
 
                 else:
                     self.view.message_incorrect()
+                    self.study_board.reset_square_color(self.study_board.game_state_stack[-1][0])
+                    self.study_board.reset_square_color(self.study_board.game_state_stack[-1][1])
                     self.view.move_entry.delete('0', 'end')
                     self.study_board.peruse_move(Direction.BACKWARD, (len(self.study_board.game_state_stack) - 1)
                                                  )  # -1 for 0 indexing
                     self.study_board.view_count -= 1
                     self.study_board.game_state_stack.pop()
                     self.study_board.move_list.pop()
+
             else:
                 pass
         else:
