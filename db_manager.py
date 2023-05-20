@@ -63,11 +63,25 @@ import sqlite3
 # # close connection
 # conn.close()
 
+#TODO: "CREATE TABLE IF NOT EXISTS openings
+#         user_id integer,
+#         opening_name text,
+#         move_list text,
+#         game_stack text,
+#         capture_stack text
+
+
+#TODO: "CREATE TABLE IF NOT EXISTS users
+#         username text,
+#         password text
+
+
 
 class DbConnection:
     my_conn = ''
     my_c = ''
 
+# TODO create script for user to choose the folder to create and save a database in
     def query_db_move_list(self):
         self.my_conn = sqlite3.connect('chess_database.db')
         self.my_c = self.my_conn.cursor()
