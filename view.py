@@ -682,30 +682,31 @@ class View(customtkinter.CTk):
         finish_frame.after(1500, finish_frame.destroy())
 
     def add_user_lboard(self, position, username, bullet, blitz, rapid):
-        user_frame = customtkinter.CTkFrame(self.lboard_scrollframe, width=800, height=100, corner_radius=0,
+        height = 50
+        user_frame = customtkinter.CTkFrame(self.lboard_scrollframe, width=800, height=height, corner_radius=0,
                                             fg_color=Light_green, border_width=1, border_color=Blue_green
                                             )
         user_frame.grid(row=position, column=0, padx=0, pady=0)
 
-        username_label = customtkinter.CTkLabel(user_frame, width=200, height=100,
+        username_label = customtkinter.CTkLabel(user_frame, width=200, height=height,
                                                 text_color=Blue_green, font=(Font, 20), text=username
                                                 )
         username_label.grid(row=0, column=0, padx=0, pady=0)
 
-        bullet_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+        bullet_lbl = customtkinter.CTkLabel(user_frame, width=200, height=height,
                                             text_color=Blue_green, font=(Font, 20), text=bullet
                                             )
         bullet_lbl.grid(row=0, column=1, padx=0, pady=0)
 
-        blitz_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+        blitz_lbl = customtkinter.CTkLabel(user_frame, width=200, height=height,
                                            text_color=Blue_green, font=(Font, 20), text=blitz
                                            )
         blitz_lbl.grid(row=0, column=2, padx=0, pady=0)
 
-        rapid_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+        rapid_lbl = customtkinter.CTkLabel(user_frame, width=200, height=height,
                                            text_color=Blue_green, font=(Font, 20), text=rapid
                                            )
-        rapid_lbl.grid(row=3, column=0, padx=0, pady=0)
+        rapid_lbl.grid(row=0, column=3, padx=0, pady=0)
 
     def clear_lboard(self):
         for child in self.lboard_scrollframe.winfo_children():
