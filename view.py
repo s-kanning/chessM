@@ -136,9 +136,9 @@ class View(customtkinter.CTk):
         container_frame.grid_rowconfigure(0, weight=1)
 
         self.lboard_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
-                                                 bg_color=Blue_green,
-                                                 fg_color=Blue_green, border_color=Light_green
-                                                 )
+                                                   bg_color=Blue_green,
+                                                   fg_color=Blue_green, border_color=Light_green
+                                                   )
         self.database_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
                                                      bg_color=Blue_green,
                                                      fg_color=Blue_green, border_color=Light_green
@@ -264,7 +264,8 @@ class View(customtkinter.CTk):
                                                          )
         self.play_reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
 
-    def _populate_database_frame(self):  # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
+    def _populate_database_frame(
+            self):  # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
         # make a frame
         database_frame = customtkinter.CTkFrame(self.database_frame, width=600, height=600, corner_radius=0,
                                                 fg_color=Blue_green
@@ -431,45 +432,46 @@ class View(customtkinter.CTk):
     def _populate_lboard_frame(self):
         # make a frame
         lboard_frame = customtkinter.CTkFrame(self.lboard_frame, width=600, height=600, corner_radius=0,
-                                                fg_color=Blue_green
-                                                )
+                                              fg_color=Blue_green
+                                              )
         lboard_frame.pack(pady=40, padx=40, side="top", expand=True)
-
 
         # Entry bar  # Add button
         self.username_entry_box = customtkinter.CTkEntry(lboard_frame, corner_radius=100, height=40,
-                                                    width=240,
-                                                    text_color=Blue_green, placeholder_text="username",
-                                                    font=(Font, 20)
-                                                    )
-        self.username_entry_box.grid(row=0, column=0, padx=0, pady=0)
+                                                         width=400,
+                                                         text_color=Blue_green, placeholder_text="Enter username:",
+                                                         font=(Font, 20)
+                                                         )
+        self.username_entry_box.grid(row=0, column=0, columnspan=2, padx=0, pady=(0, 20))
 
         add_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
-                                               text="Add",
-                                               font=(Font, 20),
-                                               command=lambda
-                                                   button="Add": self.controller.on_button_click(
-                                                   button
-                                               )
-                                               )
-        add_button.grid(row=0, column=1, padx=0, pady=0)
+                                             text="Add user", fg_color=Light_green, text_color=Blue_green,
+                                             font=(Font, 20),
+                                             command=lambda
+                                                 button="Add": self.controller.on_button_click(
+                                                 button
+                                             )
+                                             )
+        add_button.grid(row=0, column=3, padx=0, pady=(0, 20))
 
         # Name label # Bullet button # blitz button # rapid button
         username_label = customtkinter.CTkLabel(lboard_frame, width=200, height=30, corner_radius=0,
-                                                fg_color=Blue_green, text_color=Light_green, font=(Font, 20) )
-        username_label.grid(row=1, column=0)
+                                                fg_color=Light_green, text_color=Blue_green, text="User",
+                                                font=(Font, 20)
+                                                )
+        username_label.grid(row=1, column=0, padx=0, pady=0)
         bullet_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
-                                               text="Bullet",
-                                               font=(Font, 20),
-                                               command=lambda
-                                                   button="bullet": self.controller.on_button_click(
-                                                   button
-                                               )
-                                               )
+                                                text="Bullet", fg_color=Light_green,
+                                                font=(Font, 20), text_color=Blue_green,
+                                                command=lambda
+                                                    button="bullet": self.controller.on_button_click(
+                                                    button
+                                                )
+                                                )
         bullet_button.grid(row=1, column=1, padx=0, pady=0)
         blitz_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
-                                               text="Blitz",
-                                               font=(Font, 20),
+                                               text="Blitz", fg_color=Light_green,
+                                               font=(Font, 20), text_color=Blue_green,
                                                command=lambda
                                                    button="blitz": self.controller.on_button_click(
                                                    button
@@ -477,7 +479,7 @@ class View(customtkinter.CTk):
                                                )
         blitz_button.grid(row=1, column=2, padx=0, pady=0)
         rapid_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
-                                               text="Rapid",
+                                               text="Rapid", fg_color=Light_green, text_color=Blue_green,
                                                font=(Font, 20),
                                                command=lambda
                                                    button="rapid": self.controller.on_button_click(
@@ -487,8 +489,11 @@ class View(customtkinter.CTk):
         rapid_button.grid(row=1, column=3, padx=0, pady=0)
 
         # scrollable frame
-        lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, height=600, width=800)
-        lboard_scrollframe.grid(row=2, column=0, columnspan=4)
+        self.lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, border_width=1, border_color=Blue_green,
+                                                              height=600, width=800, corner_radius=0,
+                                                              fg_color=Light_green
+                                                              )
+        self.lboard_scrollframe.grid(row=2, column=0, columnspan=4, pady=10)
         # labels per user
 
     def _make_button_panel(self, frame):
