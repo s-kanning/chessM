@@ -437,18 +437,18 @@ class View(customtkinter.CTk):
         lboard_frame.pack(pady=40, padx=40, side="top", expand=True)
 
         # Entry bar  # Add button
-        self.username_entry_box = customtkinter.CTkEntry(lboard_frame, corner_radius=100, height=40,
+        self.lboard_entry_box = customtkinter.CTkEntry(lboard_frame, corner_radius=100, height=40,
                                                          width=400,
                                                          text_color=Blue_green, placeholder_text="Enter username:",
                                                          font=(Font, 20)
                                                          )
-        self.username_entry_box.grid(row=0, column=0, columnspan=2, padx=0, pady=(0, 20))
+        self.lboard_entry_box.grid(row=0, column=0, columnspan=2, padx=0, pady=(0, 20))
 
         add_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
                                              text="Add user", fg_color=Light_green, text_color=Blue_green,
                                              font=(Font, 20),
                                              command=lambda
-                                                 button="Add": self.controller.on_button_click(
+                                                 button="add_user_lboard": self.controller.on_button_click(
                                                  button
                                              )
                                              )
