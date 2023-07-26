@@ -3,6 +3,7 @@ from view import View
 from model import Model
 from chess_board import ChessBoard
 from enum import Enum, auto
+import LichessAPI
 
 
 class ChessMode(Enum):
@@ -31,6 +32,8 @@ class Controller:
         self.selector_board.create_everything()
         self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
         self.editor_board.create_everything()
+
+        self.lboard_pos = 0  # shouldbe placed in model
 
         self.app_mode = ChessMode.PLAY  # create enum 'modes' to determine active mode and thus board behavior
 
@@ -96,6 +99,23 @@ class Controller:
 
         if button == 'lboard':
             self.view.show_main_container_frame(self.view.lboard_frame)
+
+        if button == 'add_user_lboard':
+            lboard_name = self.view.lboard_entry_box.get()
+            ratings = LichessAPI.user_lookup(lboard_name)
+
+            self.view.add_user_lboard(self.lboard_pos, lboard_name, ratings[0], ratings[1], ratings[2])
+            self.lboard_pos += 1
+
+        # should store data in model to be saved and sorted
+
+        # go to lboard_entry_box and get username
+        # try to pass the username to berserk
+        # parse the data and return username, bullet, blitz, rapid
+        # call add_user_frame with the details
+
+        if button == 'clear_lboard':
+            self.view.clear_lboard()
 
         if button == 'play':
             self.view.show_main_container_frame(self.view.play_frame)
