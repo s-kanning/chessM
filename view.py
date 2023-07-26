@@ -435,16 +435,61 @@ class View(customtkinter.CTk):
                                                 )
         lboard_frame.pack(pady=40, padx=40, side="top", expand=True)
 
-        # make a query button
-        query_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
-                                               text="Button",
+
+        # Entry bar  # Add button
+        self.username_entry_box = customtkinter.CTkEntry(lboard_frame, corner_radius=100, height=40,
+                                                    width=240,
+                                                    text_color=Blue_green, placeholder_text="username",
+                                                    font=(Font, 20)
+                                                    )
+        self.username_entry_box.grid(row=0, column=0, padx=0, pady=0)
+
+        add_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
+                                               text="Add",
                                                font=(Font, 20),
                                                command=lambda
-                                                   button="pass": self.controller.on_button_click(
+                                                   button="Add": self.controller.on_button_click(
                                                    button
                                                )
                                                )
-        query_button.grid(row=0, column=0, padx=0, pady=0)
+        add_button.grid(row=0, column=1, padx=0, pady=0)
+
+        # Name label # Bullet button # blitz button # rapid button
+        username_label = customtkinter.CTkLabel(lboard_frame, width=200, height=30, corner_radius=0,
+                                                fg_color=Blue_green, text_color=Light_green, font=(Font, 20) )
+        username_label.grid(row=1, column=0)
+        bullet_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
+                                               text="Bullet",
+                                               font=(Font, 20),
+                                               command=lambda
+                                                   button="bullet": self.controller.on_button_click(
+                                                   button
+                                               )
+                                               )
+        bullet_button.grid(row=1, column=1, padx=0, pady=0)
+        blitz_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
+                                               text="Blitz",
+                                               font=(Font, 20),
+                                               command=lambda
+                                                   button="blitz": self.controller.on_button_click(
+                                                   button
+                                               )
+                                               )
+        blitz_button.grid(row=1, column=2, padx=0, pady=0)
+        rapid_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=0,
+                                               text="Rapid",
+                                               font=(Font, 20),
+                                               command=lambda
+                                                   button="rapid": self.controller.on_button_click(
+                                                   button
+                                               )
+                                               )
+        rapid_button.grid(row=1, column=3, padx=0, pady=0)
+
+        # scrollable frame
+        lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, height=600, width=800)
+        lboard_scrollframe.grid(row=2, column=0, columnspan=4)
+        # labels per user
 
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=400, corner_radius=0,
