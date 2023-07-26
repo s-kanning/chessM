@@ -77,6 +77,10 @@ class View(customtkinter.CTk):
         frame = self.frames[cont]
         frame.tkraise()
 
+    def show_main_container_frame(self, cont):
+        frame = self.display_frames[cont]
+        frame.tkraise()
+
     def _make_login_page(self):
         self.LoginPage = customtkinter.CTkFrame(self.container, border_width=20, corner_radius=0,
                                                 border_color=Light_green,
@@ -172,7 +176,6 @@ class View(customtkinter.CTk):
         self.display_frames[self.study_frame] = self.study_frame
         self.display_frames[self.play_frame] = self.play_frame
 
-
     def _populate_study_frame(self):
         self.study_opening_name = tkinter.StringVar(self.study_frame, "Study"
                                                     )  # use a string variable to easily update the opening name?
@@ -260,10 +263,6 @@ class View(customtkinter.CTk):
                 my_button="reset": self.controller.on_button_click(my_button)
                                                          )
         self.play_reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
-
-    def show_main_container_frame(self, cont):
-        frame = self.display_frames[cont]
-        frame.tkraise()
 
     def _populate_database_frame(self):  # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
         # make a frame
@@ -446,7 +445,6 @@ class View(customtkinter.CTk):
                                                )
                                                )
         query_button.grid(row=0, column=0, padx=0, pady=0)
-
 
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=400, corner_radius=0,
