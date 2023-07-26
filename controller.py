@@ -94,6 +94,9 @@ class Controller:
         if button == 'database':
             self.view.show_main_container_frame(self.view.database_frame)
 
+        if button == 'lboard':
+            self.view.show_main_container_frame(self.view.lboard_frame)
+
         if button == 'play':
             self.view.show_main_container_frame(self.view.play_frame)
             self.app_mode = ChessMode.PLAY

@@ -21,8 +21,10 @@ class View(customtkinter.CTk):
         self.iconbitmap(r"C:\Users\sdkan\PycharmProjects\chessMem\images\ChessM icon zoom.ico")
         self.geometry(f"{1240}x{860}")
 
-        self.minsize(width=1240, height=900)
-        self.maxsize(width=1240, height=900)
+        # TODO: make scalable
+
+        # self.minsize(width=1240, height=900)
+        # self.maxsize(width=1240, height=900)
 
         self.grid_columnconfigure(4, weight=1)
         self.grid_rowconfigure(4, weight=1)
@@ -49,6 +51,7 @@ class View(customtkinter.CTk):
         self._populate_editor_frame()
         self._populate_database_frame()
         self._populate_play_frame()
+        self._populate_lboard_frame()
 
         self._make_button_panel(self.main_page_display)
         self.MainPage.grid(row=0, column=0, rowspan=2, columnspan=4, sticky="NSEW")
@@ -128,6 +131,10 @@ class View(customtkinter.CTk):
         container_frame.grid_rowconfigure(0, weight=1)
         container_frame.grid_rowconfigure(0, weight=1)
 
+        self.lboard_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
+                                                 bg_color=Blue_green,
+                                                 fg_color=Blue_green, border_color=Light_green
+                                                 )
         self.database_frame = customtkinter.CTkFrame(container_frame, corner_radius=20, border_width=10,
                                                      bg_color=Blue_green,
                                                      fg_color=Blue_green, border_color=Light_green
@@ -148,19 +155,23 @@ class View(customtkinter.CTk):
                                                  bg_color=Blue_green,
                                                  fg_color=Blue_green, border_color=Light_green
                                                  )
+
         self.play_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.study_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.database_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.selector_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
         self.editor_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
+        self.lboard_frame.grid(row=0, column=0, sticky='nswe', pady=10, padx=10, ipadx=20)
 
         self.display_frames = {}
 
+        self.display_frames[self.lboard_frame] = self.lboard_frame
         self.display_frames[self.database_frame] = self.database_frame
         self.display_frames[self.selector_frame] = self.selector_frame
         self.display_frames[self.editor_frame] = self.editor_frame
         self.display_frames[self.study_frame] = self.study_frame
         self.display_frames[self.play_frame] = self.play_frame
+
 
     def _populate_study_frame(self):
         self.study_opening_name = tkinter.StringVar(self.study_frame, "Study"
@@ -254,7 +265,7 @@ class View(customtkinter.CTk):
         frame = self.display_frames[cont]
         frame.tkraise()
 
-    def _populate_database_frame(self):
+    def _populate_database_frame(self):  # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
         # make a frame
         database_frame = customtkinter.CTkFrame(self.database_frame, width=600, height=600, corner_radius=0,
                                                 fg_color=Blue_green
@@ -418,8 +429,27 @@ class View(customtkinter.CTk):
                                                            )
         self.editor_reset_button.grid(row=3, column=3, padx=0, pady=(0, 40), sticky='s')
 
+    def _populate_lboard_frame(self):
+        # make a frame
+        lboard_frame = customtkinter.CTkFrame(self.lboard_frame, width=600, height=600, corner_radius=0,
+                                                fg_color=Blue_green
+                                                )
+        lboard_frame.pack(pady=40, padx=40, side="top", expand=True)
+
+        # make a query button
+        query_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
+                                               text="Button",
+                                               font=(Font, 20),
+                                               command=lambda
+                                                   button="pass": self.controller.on_button_click(
+                                                   button
+                                               )
+                                               )
+        query_button.grid(row=0, column=0, padx=0, pady=0)
+
+
     def _make_button_panel(self, frame):
-        button_panel = customtkinter.CTkFrame(frame, height=300, width=300, corner_radius=0,
+        button_panel = customtkinter.CTkFrame(frame, height=300, width=400, corner_radius=0,
                                               border_width=0,
                                               fg_color=Blue_green, border_color=Green
                                               )
@@ -427,9 +457,9 @@ class View(customtkinter.CTk):
         button_panel.grid_rowconfigure(5, weight=1)
 
         # panel controls
-        panel_button_height = 150
-        panel_button_width = 200
-        panel_button_spacingy = 12
+        panel_button_height = 125
+        panel_button_width = 220
+        panel_button_spacingy = 10
         panel_button_fontsize = 30
 
         button1 = customtkinter.CTkButton(button_panel, height=panel_button_height,
@@ -472,6 +502,16 @@ class View(customtkinter.CTk):
                                           )
         button4.grid(row=3, column=0, pady=(0, panel_button_spacingy), sticky='s')
 
+        button5 = customtkinter.CTkButton(button_panel, height=panel_button_height,
+                                          width=panel_button_width,
+                                          text="Leaderboard", text_color=Blue_green,
+                                          corner_radius=20, border_width=0,
+                                          fg_color=Light_green, border_color=Green,
+                                          font=(Font, panel_button_fontsize),
+                                          command=lambda button="lboard": self.controller.on_button_click(button)
+                                          )
+        button5.grid(row=4, column=0, pady=(0, panel_button_spacingy), sticky='s')
+
         logout_button = customtkinter.CTkButton(button_panel, height=panel_button_height,
                                                 width=panel_button_width,
                                                 text="Logout", text_color=Blue_green,
@@ -480,7 +520,7 @@ class View(customtkinter.CTk):
                                                 font=(Font, panel_button_fontsize),
                                                 command=lambda button="logout": self.controller.on_button_click(button)
                                                 )
-        logout_button.grid(row=4, column=0, sticky='s')
+        logout_button.grid(row=5, column=0, sticky='s')
 
     # def _make_settings_page(self):
     #     self.SettingsPage = customtkinter.CTkFrame(self.container, border_width=20, corner_radius=0,
