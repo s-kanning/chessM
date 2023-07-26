@@ -264,8 +264,8 @@ class View(customtkinter.CTk):
                                                          )
         self.play_reset_button.grid(row=4, column=3, padx=0, pady=(0, 40), sticky='s')
 
-    def _populate_database_frame(
-            self):  # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
+    # TODO make this a Profile/Settings page with options to change things, username, password,visuals, look at all entries
+    def _populate_database_frame(self):
         # make a frame
         database_frame = customtkinter.CTkFrame(self.database_frame, width=600, height=600, corner_radius=0,
                                                 fg_color=Blue_green
@@ -489,10 +489,11 @@ class View(customtkinter.CTk):
         rapid_button.grid(row=1, column=3, padx=0, pady=0)
 
         # scrollable frame
-        self.lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, border_width=1, border_color=Blue_green,
-                                                              height=600, width=800, corner_radius=0,
-                                                              fg_color=Light_green
-                                                              )
+        self.lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, border_width=1,
+                                                                   border_color=Blue_green,
+                                                                   height=600, width=800, corner_radius=0,
+                                                                   fg_color=Light_green
+                                                                   )
         self.lboard_scrollframe.grid(row=2, column=0, columnspan=4, pady=10)
         # labels per user
 
@@ -679,3 +680,33 @@ class View(customtkinter.CTk):
         finish_message_label.grid(row=0, column=0)
         finish_frame.update()
         finish_frame.after(1500, finish_frame.destroy())
+
+    def add_user_lboard(self, position, username, bullet, blitz, rapid):
+        user_frame = customtkinter.CTkFrame(self.lboard_scrollframe, width=800, height=100, corner_radius=0,
+                                            fg_color=Light_green, border_width=1, border_color=Blue_green
+                                            )
+        user_frame.grid(row=position, column=0, padx=0, pady=0)
+
+        username_label = customtkinter.CTkLabel(user_frame, width=200, height=100,
+                                                text_color=Blue_green, font=(Font, 20), text=username
+                                                )
+        username_label.grid(row=0, column=0, padx=0, pady=0)
+
+        bullet_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+                                            text_color=Blue_green, font=(Font, 20), text=bullet
+                                            )
+        bullet_lbl.grid(row=0, column=1, padx=0, pady=0)
+
+        blitz_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+                                           text_color=Blue_green, font=(Font, 20), text=blitz
+                                           )
+        blitz_lbl.grid(row=0, column=2, padx=0, pady=0)
+
+        rapid_lbl = customtkinter.CTkLabel(user_frame, width=200, height=100,
+                                           text_color=Blue_green, font=(Font, 20), text=rapid
+                                           )
+        rapid_lbl.grid(row=3, column=0, padx=0, pady=0)
+
+    def clear_lboard(self):
+        for child in self.lboard_scrollframe.winfo_children():
+            child.destroy()
