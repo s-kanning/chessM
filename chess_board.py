@@ -10,7 +10,7 @@ class ChessBoard:
     view = None
 
     empty_image = None
-    image_size = 70
+    image_size = 72
 
     def __init__(self, view, controller, frame):
         self.view = view
@@ -49,7 +49,7 @@ class ChessBoard:
         self._new_game_set()
 
     def _connect_chess_images(
-            self):  # TODO replaces images with cleaner images: https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
+            self):
         self.K_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\K.png"),
             size=(self.image_size, self.image_size)
@@ -61,11 +61,11 @@ class ChessBoard:
         )
         self.Q_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\Q.png"),
-            size=(65, 65)
+            size=(self.image_size, self.image_size)
         )
         self.q_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\qq.png"),
-            size=(65, 65)
+            size=(self.image_size, self.image_size)
         )
         self.R_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\R.png"),
@@ -93,7 +93,7 @@ class ChessBoard:
         )
         self.P_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\P.png"),
-            size=(55, self.image_size)
+            size=(self.image_size, self.image_size)
         )
         self.p_image = customtkinter.CTkImage(
             light_image=Image.open(r"C:\Users\sdkan\PycharmProjects\chessMem\images\pp.png"),
@@ -436,7 +436,6 @@ class ChessBoard:
         else:
             return False, None
 
-    # TODO: study mode: reset color after incorrect moves
     def reset_square_color(self, coord):
         if (int((int(coord) / 8)) + (int(int(coord) % 8))) % 2 == 0:
             self.buttons[coord].configure(self, fg_color=configurations.Light_green)
