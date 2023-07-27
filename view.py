@@ -682,9 +682,13 @@ class View(customtkinter.CTk):
         finish_frame.after(1500, finish_frame.destroy())
 
     def add_user_lboard(self, position, username, bullet, blitz, rapid):
+        if position % 2 == 0:
+            color = Alt_light_green
+        else:
+            color = Light_green
         height = 50
         user_frame = customtkinter.CTkFrame(self.lboard_scrollframe, width=800, height=height, corner_radius=0,
-                                            fg_color=Light_green, border_width=1, border_color=Blue_green
+                                            fg_color=color
                                             )
         user_frame.grid(row=position, column=0, padx=0, pady=0)
 
