@@ -103,9 +103,11 @@ class Controller:
         if button == 'add_user_lboard':
             lboard_name = self.view.lboard_entry_box.get()
             ratings = LichessAPI.user_lookup(lboard_name)
-
-            self.view.add_user_lboard(self.lboard_pos, lboard_name, ratings[0], ratings[1], ratings[2])
-            self.lboard_pos += 1
+            if ratings is not None:
+                self.view.add_user_lboard(self.lboard_pos, lboard_name, ratings[0], ratings[1], ratings[2])
+                self.lboard_pos += 1
+            else:
+                pass
 
         # should store data in model to be saved and sorted
 
