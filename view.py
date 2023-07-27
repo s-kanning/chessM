@@ -438,10 +438,10 @@ class View(customtkinter.CTk):
 
         # Entry bar  # Add button
         self.lboard_entry_box = customtkinter.CTkEntry(lboard_frame, corner_radius=100, height=40,
-                                                         width=400,
-                                                         text_color=Blue_green, placeholder_text="Enter username:",
-                                                         font=(Font, 20)
-                                                         )
+                                                       width=400,
+                                                       text_color=Blue_green, placeholder_text="Enter username:",
+                                                       font=(Font, 20)
+                                                       )
         self.lboard_entry_box.grid(row=0, column=0, columnspan=2, padx=0, pady=(0, 20))
 
         add_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
@@ -491,11 +491,20 @@ class View(customtkinter.CTk):
         # scrollable frame
         self.lboard_scrollframe = customtkinter.CTkScrollableFrame(lboard_frame, border_width=1,
                                                                    border_color=Blue_green,
-                                                                   height=600, width=800, corner_radius=0,
+                                                                   height=500, width=800, corner_radius=0,
                                                                    fg_color=Light_green
                                                                    )
-        self.lboard_scrollframe.grid(row=2, column=0, columnspan=4, pady=10)
+        self.lboard_scrollframe.grid(row=2, column=0, rowspan=3, columnspan=4, pady=10)
+
         # labels per user
+        clear_button = customtkinter.CTkButton(lboard_frame, width=200, corner_radius=20,
+                                               text="Clear", fg_color=Light_green, text_color=Blue_green,
+                                               font=(Font, 20), command=lambda
+                button="clear_lboard": self.controller.on_button_click(
+                button
+            )
+                                               )
+        clear_button.grid(row=5, column=3, padx=0, pady=0)
 
     def _make_button_panel(self, frame):
         button_panel = customtkinter.CTkFrame(frame, height=300, width=400, corner_radius=0,

@@ -118,6 +118,7 @@ class Controller:
 
         if button == 'clear_lboard':
             self.view.clear_lboard()
+            self.lboard_pos = 0
 
         if button == 'play':
             self.view.show_main_container_frame(self.view.play_frame)
