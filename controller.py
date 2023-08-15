@@ -102,6 +102,8 @@ class Controller:
 
         if button == 'add_user_lboard':
             lboard_name = self.view.lboard_entry_box.get()
+            self.view.lboard_entry_box.delete(0, 'end')
+            self.view.lboard_entry_box.focus()
             ratings = LichessAPI.user_lookup(lboard_name)
             if ratings is not None:
                 self.view.add_user_lboard(self.lboard_pos, lboard_name, ratings[0], ratings[1], ratings[2])
@@ -110,11 +112,15 @@ class Controller:
                 pass
 
         # should store data in model to be saved and sorted
+        '''
+        data retrieved from berserk : list of username, bullet, blitz, rapid
+        should be saved in model as dictionary, username, bullet, blitz, rapid
+        
+        make a sort function based on column 1, 2, or 3.
+        
+        '''
 
-        # go to lboard_entry_box and get username
-        # try to pass the username to berserk
-        # parse the data and return username, bullet, blitz, rapid
-        # call add_user_frame with the details
+
 
         if button == 'clear_lboard':
             self.view.clear_lboard()
