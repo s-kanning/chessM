@@ -17,6 +17,8 @@ class Model:
         self.active_game_stack = []
         self.active_capture_stack = []
 
+        self.lboard_list = []
+
     def login(self, username, password):
         check = db_connection.check_login_details(self, username, password)  # returns a list of tuples
 
@@ -80,3 +82,18 @@ class Model:
         move_only_list = temp_list
 
         return move_only_list
+
+    def lboard_list_append(self, item):
+        self.lboard_list.append(item)
+
+    def lboard_list_sort(self, rating_type):
+        # rating_type = 1, 2, or 3 : bullet, blitz, rapid
+        for i in range(len(self.lboard_list)-1, 0, -1):
+            for j in range(i):
+                if self.lboard_list[j][rating_type] < self.lboard_list[j+1][rating_type]:
+                    temp = self.lboard_list[j]
+                    self.lboard_list[j] = self.lboard_list[j+1]
+                    self.lboard_list[j+1] = temp
+
+    def lboard_list_clear(self):
+        self.lboard_list.clear()
