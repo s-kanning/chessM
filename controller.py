@@ -106,6 +106,7 @@ class Controller:
             self.view.lboard_entry_box.focus()
             ratings = LichessAPI.user_lookup(lboard_name)
             if ratings is not None:
+                self.model.lboard_list_append([lboard_name, ratings[0], ratings[1], ratings[2]])
                 self.view.add_user_lboard(self.lboard_pos, lboard_name, ratings[0], ratings[1], ratings[2])
                 self.lboard_pos += 1
             else:
@@ -120,10 +121,19 @@ class Controller:
         
         '''
 
+        if button == 'lboard_bullet':
+            self.sort_lboard(1)
+
+        if button == 'lboard_blitz':
+            self.sort_lboard(2)
+
+        if button == 'lboard_rapid':
+            self.sort_lboard(3)
 
 
         if button == 'clear_lboard':
             self.view.clear_lboard()
+            self.model.lboard_list_clear()
             self.lboard_pos = 0
 
         if button == 'play':
@@ -370,6 +380,14 @@ class Controller:
         else:
             print("no suggested move")
             pass
+
+    def sort_lboard(self, rating_type):
+        self.model.lboard_list_sort(rating_type)  # 1 = bullet, 2 = blitz, 3 = rapid
+        self.view.clear_lboard()
+        self.lboard_pos = 0
+        for item in self.model.lboard_list:
+            self.view.add_user_lboard(self.lboard_pos, item[0], item[1], item[2], item[3])
+            self.lboard_pos += 1
 
 
 if __name__ == '__main__':
