@@ -464,7 +464,7 @@ class View(customtkinter.CTk):
                                                 text="Bullet", fg_color=Light_green,
                                                 font=(Font, 20), text_color=Blue_green,
                                                 command=lambda
-                                                    button="bullet": self.controller.on_button_click(
+                                                    button="lboard_bullet": self.controller.on_button_click(
                                                     button
                                                 )
                                                 )
@@ -473,7 +473,7 @@ class View(customtkinter.CTk):
                                                text="Blitz", fg_color=Light_green,
                                                font=(Font, 20), text_color=Blue_green,
                                                command=lambda
-                                                   button="blitz": self.controller.on_button_click(
+                                                   button="lboard_blitz": self.controller.on_button_click(
                                                    button
                                                )
                                                )
@@ -482,7 +482,7 @@ class View(customtkinter.CTk):
                                                text="Rapid", fg_color=Light_green, text_color=Blue_green,
                                                font=(Font, 20),
                                                command=lambda
-                                                   button="rapid": self.controller.on_button_click(
+                                                   button="lboard_rapid": self.controller.on_button_click(
                                                    button
                                                )
                                                )
