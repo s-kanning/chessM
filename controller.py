@@ -5,6 +5,32 @@ from chess_board import ChessBoard
 from enum import Enum, auto
 import LichessAPI
 
+'''
+TODO list
+Record user progress: date studied, moves studied (total session performance), individual move performance
+
+Create a way to categorize openings, or a tree?
+
+move to a random move within a position
+
+spaced repetition
+
+add comments to openings
+
+add function to flip board
+add ability to train as black
+
+login page - create new user
+'''
+
+
+
+# TODO add path for db to be set up
+# import os
+# db_file_path = os.path.join(os.path.dirname(__file__), "my_database.db")
+# print(db_file_path)
+
+
 
 class ChessMode(Enum):
     PLAY = auto()
@@ -33,7 +59,7 @@ class Controller:
         self.editor_board = ChessBoard(view=self.view, controller=self, frame=self.view.editor_board_frame)
         self.editor_board.create_everything()
 
-        self.lboard_pos = 0  # shouldbe placed in model
+        self.lboard_pos = 0  # should be placed in model
 
         self.app_mode = ChessMode.PLAY  # create enum 'modes' to determine active mode and thus board behavior
 
@@ -347,6 +373,8 @@ class Controller:
         elif self.app_mode == ChessMode.INACTIVE:
             pass
 
+    # TODO: add flip_board function
+    # TODO: add ability to train as black
     def submit_move(self, player_move):  # add some test cases to prevent breaking program
         if self.view.move_entry.get() != '':
             if len(self.model.active_moves_only) >= self.study_board.view_count:
